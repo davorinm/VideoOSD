@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="VideoOSD" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pAq-IX-V9O">
+                                <rect key="frame" x="137.5" y="283" width="100" height="100"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="ENq-Ft-VgG"/>
+                                    <constraint firstAttribute="width" constant="100" id="TPt-Za-CMN"/>
+                                </constraints>
+                                <state key="normal" title="Start"/>
+                                <connections>
+                                    <action selector="startButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="a5u-cj-xpv"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="pAq-IX-V9O" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="lb7-3j-YuV"/>
+                            <constraint firstItem="pAq-IX-V9O" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="pJr-hi-mgP"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="startButton" destination="pAq-IX-V9O" id="Ja0-7m-wjx"/>
+                        <segue destination="lAm-6B-vtf" kind="show" identifier="video" id="2Aw-b8-luE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+        <!--Video View Controller-->
+        <scene sceneID="qVE-sg-Ygg">
+            <objects>
+                <viewController id="lAm-6B-vtf" customClass="VideoViewController" customModule="VideoOSD" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Zdr-Dc-Sqc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ygi-B0-E4F" customClass="UIVideoView" customModule="VideoOSD" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yae-qg-sJ3">
+                                        <rect key="frame" x="184" y="308" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qpH-Ov-2st">
+                                <rect key="frame" x="20" y="40" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="Aq5-QL-zXW"/>
+                                    <constraint firstAttribute="height" constant="30" id="qKJ-ds-c2r"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="backButtonPressed:" destination="lAm-6B-vtf" eventType="touchUpInside" id="H1V-T0-R2T"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ygi-B0-E4F" firstAttribute="leading" secondItem="mKB-27-XLh" secondAttribute="leading" id="2ag-g9-O5x"/>
+                            <constraint firstItem="qpH-Ov-2st" firstAttribute="leading" secondItem="mKB-27-XLh" secondAttribute="leading" constant="20" id="BsV-6U-Y1f"/>
+                            <constraint firstItem="ygi-B0-E4F" firstAttribute="top" secondItem="mKB-27-XLh" secondAttribute="top" id="bca-PF-Tkq"/>
+                            <constraint firstItem="mKB-27-XLh" firstAttribute="bottom" secondItem="ygi-B0-E4F" secondAttribute="bottom" id="hMR-3Q-YMU"/>
+                            <constraint firstItem="qpH-Ov-2st" firstAttribute="top" secondItem="mKB-27-XLh" secondAttribute="top" constant="20" id="ieg-Jz-Iia"/>
+                            <constraint firstItem="mKB-27-XLh" firstAttribute="trailing" secondItem="ygi-B0-E4F" secondAttribute="trailing" id="x3e-L1-61n"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="mKB-27-XLh"/>
+                    </view>
+                    <connections>
+                        <outlet property="videoView" destination="ygi-B0-E4F" id="5PU-MQ-DeD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qdk-3D-MOR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1590" y="34"/>
+        </scene>
+    </scenes>
+</document>
