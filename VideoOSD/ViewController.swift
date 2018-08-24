@@ -9,7 +9,6 @@
 import UIKit
 
 class ViewController: UIViewController {
-    @IBOutlet weak var startButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,10 +18,6 @@ class ViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-
-    @IBAction func startButtonPressed(_ sender: Any) {
-        self.performSegue(withIdentifier: "video", sender: nil)
     }
 }
 

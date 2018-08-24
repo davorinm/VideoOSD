@@ -15,8 +15,10 @@
 		1E53CC4E2128A937008F1B20 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4A2128A937008F1B20 /* VideoPlayerView.swift */; };
 		1E53CC4F2128A937008F1B20 /* VideoRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4B2128A937008F1B20 /* VideoRecordingView.swift */; };
 		1E53CC502128A937008F1B20 /* UIVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4C2128A937008F1B20 /* UIVideoView.swift */; };
-		1E53CC512128A937008F1B20 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4D2128A937008F1B20 /* VideoViewController.swift */; };
-		1E53CC532128C6C4008F1B20 /* Tetet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC522128C6C4008F1B20 /* Tetet.swift */; };
+		1E53CC512128A937008F1B20 /* VideoCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */; };
+		1E53CC56212A9BE6008F1B20 /* Tetet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC522128C6C4008F1B20 /* Tetet.swift */; };
+		1E53CC57212A9BED008F1B20 /* Bababa.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC5421295EAD008F1B20 /* Bababa.swift */; };
+		1E53CC59212E1A33008F1B20 /* VideoOSDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC58212E1A33008F1B20 /* VideoOSDViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,8 +32,10 @@
 		1E53CC4A2128A937008F1B20 /* VideoPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		1E53CC4B2128A937008F1B20 /* VideoRecordingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoRecordingView.swift; sourceTree = "<group>"; };
 		1E53CC4C2128A937008F1B20 /* UIVideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIVideoView.swift; sourceTree = "<group>"; };
-		1E53CC4D2128A937008F1B20 /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
+		1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCaptureViewController.swift; sourceTree = "<group>"; };
 		1E53CC522128C6C4008F1B20 /* Tetet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tetet.swift; sourceTree = "<group>"; };
+		1E53CC5421295EAD008F1B20 /* Bababa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bababa.swift; sourceTree = "<group>"; };
+		1E53CC58212E1A33008F1B20 /* VideoOSDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOSDViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,8 @@
 				1E53CC492128A917008F1B20 /* Video */,
 				1E53CC372128A8F1008F1B20 /* AppDelegate.swift */,
 				1E53CC392128A8F1008F1B20 /* ViewController.swift */,
+				1E53CC58212E1A33008F1B20 /* VideoOSDViewController.swift */,
+				1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */,
 				1E53CC3B2128A8F1008F1B20 /* Main.storyboard */,
 				1E53CC3E2128A8F2008F1B20 /* Assets.xcassets */,
 				1E53CC402128A8F2008F1B20 /* LaunchScreen.storyboard */,
@@ -78,10 +84,10 @@
 		1E53CC492128A917008F1B20 /* Video */ = {
 			isa = PBXGroup;
 			children = (
+				1E53CC5421295EAD008F1B20 /* Bababa.swift */,
 				1E53CC4C2128A937008F1B20 /* UIVideoView.swift */,
 				1E53CC4A2128A937008F1B20 /* VideoPlayerView.swift */,
 				1E53CC4B2128A937008F1B20 /* VideoRecordingView.swift */,
-				1E53CC4D2128A937008F1B20 /* VideoViewController.swift */,
 				1E53CC522128C6C4008F1B20 /* Tetet.swift */,
 			);
 			path = Video;
@@ -158,12 +164,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E53CC57212A9BED008F1B20 /* Bababa.swift in Sources */,
 				1E53CC3A2128A8F1008F1B20 /* ViewController.swift in Sources */,
 				1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */,
-				1E53CC512128A937008F1B20 /* VideoViewController.swift in Sources */,
+				1E53CC512128A937008F1B20 /* VideoCaptureViewController.swift in Sources */,
 				1E53CC502128A937008F1B20 /* UIVideoView.swift in Sources */,
-				1E53CC532128C6C4008F1B20 /* Tetet.swift in Sources */,
+				1E53CC56212A9BE6008F1B20 /* Tetet.swift in Sources */,
 				1E53CC4F2128A937008F1B20 /* VideoRecordingView.swift in Sources */,
+				1E53CC59212E1A33008F1B20 /* VideoOSDViewController.swift in Sources */,
 				1E53CC4E2128A937008F1B20 /* VideoPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
