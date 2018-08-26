@@ -8,17 +8,6 @@
 
 import UIKit
 import AVFoundation
-import CoreMedia
-
-let CMYKHalftoneFilter = CIFilter(name: "CICMYKHalftone", withInputParameters: ["inputWidth" : 20, "inputSharpness": 1])
-let ComicEffectFilter = CIFilter(name: "CIComicEffect")
-let CrystallizeFilter = CIFilter(name: "CICrystallize", withInputParameters: ["inputRadius" : 30])
-let EdgesEffectFilter = CIFilter(name: "CIEdges", withInputParameters: ["inputIntensity" : 10])
-let HexagonalPixellateFilter = CIFilter(name: "CIHexagonalPixellate", withInputParameters: ["inputScale" : 40])
-let InvertFilter = CIFilter(name: "CIColorInvert")
-let PointillizeFilter = CIFilter(name: "CIPointillize", withInputParameters: ["inputRadius" : 30])
-let LineOverlayFilter = CIFilter(name: "CILineOverlay")
-let PosterizeFilter = CIFilter(name: "CIColorPosterize", withInputParameters: ["inputLevels" : 5])
 
 class VideoOSDViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     @IBOutlet weak var imageView: UIImageView!

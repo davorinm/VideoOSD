@@ -76,7 +76,7 @@
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <connections>
-                                    <action selector="backButtonPressed:" destination="lAm-6B-vtf" eventType="touchUpInside" id="H1V-T0-R2T"/>
+                                    <action selector="stopButtonPressed:" destination="lAm-6B-vtf" eventType="touchUpInside" id="Yue-xe-k9s"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -118,8 +118,7 @@
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <connections>
-                                    <action selector="backButtonPressed:" destination="lAm-6B-vtf" eventType="touchUpInside" id="UND-eC-3hh"/>
-                                    <action selector="backButtonPressed:" destination="CkO-4C-Gyg" eventType="touchUpInside" id="Un3-64-RE9"/>
+                                    <action selector="stopButtonPressed:" destination="CkO-4C-Gyg" eventType="touchUpInside" id="ABe-Jo-Z2I"/>
                                 </connections>
                             </button>
                         </subviews>

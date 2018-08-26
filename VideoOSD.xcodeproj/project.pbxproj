@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA902131405200943AC4 /* PhotoLibrary.swift */; };
+		1E24CA942131423A00943AC4 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA932131423A00943AC4 /* Filters.swift */; };
 		1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC372128A8F1008F1B20 /* AppDelegate.swift */; };
 		1E53CC3A2128A8F1008F1B20 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC392128A8F1008F1B20 /* ViewController.swift */; };
 		1E53CC3D2128A8F1008F1B20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E53CC3B2128A8F1008F1B20 /* Main.storyboard */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1E24CA902131405200943AC4 /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
+		1E24CA932131423A00943AC4 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		1E53CC342128A8F1008F1B20 /* VideoOSD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoOSD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E53CC372128A8F1008F1B20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E53CC392128A8F1008F1B20 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -49,6 +53,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E24CA92213140A200943AC4 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				1E24CA902131405200943AC4 /* PhotoLibrary.swift */,
+				1E24CA932131423A00943AC4 /* Filters.swift */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
 		1E53CC2B2128A8F1008F1B20 = {
 			isa = PBXGroup;
 			children = (
@@ -68,11 +81,12 @@
 		1E53CC362128A8F1008F1B20 /* VideoOSD */ = {
 			isa = PBXGroup;
 			children = (
+				1E24CA92213140A200943AC4 /* Tools */,
 				1E53CC492128A917008F1B20 /* Video */,
 				1E53CC372128A8F1008F1B20 /* AppDelegate.swift */,
 				1E53CC392128A8F1008F1B20 /* ViewController.swift */,
-				1E53CC58212E1A33008F1B20 /* VideoOSDViewController.swift */,
 				1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */,
+				1E53CC58212E1A33008F1B20 /* VideoOSDViewController.swift */,
 				1E53CC3B2128A8F1008F1B20 /* Main.storyboard */,
 				1E53CC3E2128A8F2008F1B20 /* Assets.xcassets */,
 				1E53CC402128A8F2008F1B20 /* LaunchScreen.storyboard */,
@@ -166,7 +180,9 @@
 			files = (
 				1E53CC57212A9BED008F1B20 /* Bababa.swift in Sources */,
 				1E53CC3A2128A8F1008F1B20 /* ViewController.swift in Sources */,
+				1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */,
 				1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */,
+				1E24CA942131423A00943AC4 /* Filters.swift in Sources */,
 				1E53CC512128A937008F1B20 /* VideoCaptureViewController.swift in Sources */,
 				1E53CC502128A937008F1B20 /* UIVideoView.swift in Sources */,
 				1E53CC56212A9BE6008F1B20 /* Tetet.swift in Sources */,
