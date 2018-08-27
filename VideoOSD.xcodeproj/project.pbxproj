@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E21CCEB213480DF00AB9685 /* UIImage+FromUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEA213480DF00AB9685 /* UIImage+FromUIView.swift */; };
+		1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */; };
+		1E21CCEF2134862200AB9685 /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E21CCEE2134862200AB9685 /* OverlayView.xib */; };
+		1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF02134867900AB9685 /* OverlayView.swift */; };
+		1E21CCF4213487C200AB9685 /* UIView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF3213487C200AB9685 /* UIView+Image.swift */; };
+		1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF52134931A00AB9685 /* UIView+Xib.swift */; };
 		1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA902131405200943AC4 /* PhotoLibrary.swift */; };
 		1E24CA942131423A00943AC4 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA932131423A00943AC4 /* Filters.swift */; };
 		1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC372128A8F1008F1B20 /* AppDelegate.swift */; };
@@ -24,6 +30,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1E21CCEA213480DF00AB9685 /* UIImage+FromUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+FromUIView.swift"; sourceTree = "<group>"; };
+		1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableTimer.swift; sourceTree = "<group>"; };
+		1E21CCEE2134862200AB9685 /* OverlayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
+		1E21CCF02134867900AB9685 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		1E21CCF3213487C200AB9685 /* UIView+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Image.swift"; sourceTree = "<group>"; };
+		1E21CCF52134931A00AB9685 /* UIView+Xib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Xib.swift"; sourceTree = "<group>"; };
 		1E24CA902131405200943AC4 /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
 		1E24CA932131423A00943AC4 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		1E53CC342128A8F1008F1B20 /* VideoOSD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoOSD.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,11 +65,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E21CCF22134869400AB9685 /* OverlayView */ = {
+			isa = PBXGroup;
+			children = (
+				1E21CCEE2134862200AB9685 /* OverlayView.xib */,
+				1E21CCF02134867900AB9685 /* OverlayView.swift */,
+			);
+			path = OverlayView;
+			sourceTree = "<group>";
+		};
 		1E24CA92213140A200943AC4 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
 				1E24CA902131405200943AC4 /* PhotoLibrary.swift */,
 				1E24CA932131423A00943AC4 /* Filters.swift */,
+				1E21CCEA213480DF00AB9685 /* UIImage+FromUIView.swift */,
+				1E21CCF3213487C200AB9685 /* UIView+Image.swift */,
+				1E21CCF52134931A00AB9685 /* UIView+Xib.swift */,
+				1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -87,6 +112,7 @@
 				1E53CC392128A8F1008F1B20 /* ViewController.swift */,
 				1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */,
 				1E53CC58212E1A33008F1B20 /* VideoOSDViewController.swift */,
+				1E21CCF22134869400AB9685 /* OverlayView */,
 				1E53CC3B2128A8F1008F1B20 /* Main.storyboard */,
 				1E53CC3E2128A8F2008F1B20 /* Assets.xcassets */,
 				1E53CC402128A8F2008F1B20 /* LaunchScreen.storyboard */,
@@ -166,6 +192,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E53CC422128A8F2008F1B20 /* LaunchScreen.storyboard in Resources */,
+				1E21CCEF2134862200AB9685 /* OverlayView.xib in Resources */,
 				1E53CC3F2128A8F2008F1B20 /* Assets.xcassets in Resources */,
 				1E53CC3D2128A8F1008F1B20 /* Main.storyboard in Resources */,
 			);
@@ -179,12 +206,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E53CC57212A9BED008F1B20 /* Bababa.swift in Sources */,
+				1E21CCF4213487C200AB9685 /* UIView+Image.swift in Sources */,
+				1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */,
+				1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */,
 				1E53CC3A2128A8F1008F1B20 /* ViewController.swift in Sources */,
 				1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */,
 				1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */,
+				1E21CCEB213480DF00AB9685 /* UIImage+FromUIView.swift in Sources */,
 				1E24CA942131423A00943AC4 /* Filters.swift in Sources */,
 				1E53CC512128A937008F1B20 /* VideoCaptureViewController.swift in Sources */,
 				1E53CC502128A937008F1B20 /* UIVideoView.swift in Sources */,
+				1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */,
 				1E53CC56212A9BE6008F1B20 /* Tetet.swift in Sources */,
 				1E53CC4F2128A937008F1B20 /* VideoRecordingView.swift in Sources */,
 				1E53CC59212E1A33008F1B20 /* VideoOSDViewController.swift in Sources */,
