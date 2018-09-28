@@ -11,8 +11,9 @@ import AVFoundation
 
 class VideoOSDViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var recordingButton: UIButton!
     
-    private let captureSession = AVCaptureSession()
+    private var captureSession: AVCaptureSession!
     
     private var assetWriter: AVAssetWriter!
     private var assetWriterInput: AVAssetWriterInput!

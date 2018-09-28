@@ -10,15 +10,12 @@ import Foundation
 import Photos
 
 class PhotoLibrary {
-    class func saveToPhotos(url: URL, removeSourceFile: Bool = false, finished: @escaping ((_ saved: Bool, _ error: Error?) -> Void)) {
+    class func moveToPhotos(url: URL, finished: @escaping ((_ saved: Bool, _ error: Error?) -> Void)) {
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
         }) { (saved, error) in
             if saved {
-                if removeSourceFile {
-                    try? FileManager.default.removeItem(at: url)
-                }
-                
+                try? FileManager.default.removeItem(at: url)
                 finished(true, error)
             } else {
                 finished(false, error)

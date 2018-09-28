@@ -9,28 +9,49 @@
 import UIKit
 
 extension UIView {
-    
-    class func createFromNib2(nibName: String) -> UIView {
-        let nib = UINib.init(nibName: nibName, bundle: nil)
-        let view = nib.instantiate(withOwner: nil, options: nil).first as! UIView
-        
+    /*
+     Xib without owner
+     */
+    class func createFromNib<T : UIView>() -> T? {
+        let nib = UINib(nibName: nibName, bundle: nil)
+        let nibViews = nib.instantiate(withOwner: nil, options: nil)
+        let view = nibViews.first as? T
+
         return view
     }
     
-    class func createFromNib(nibName: String, owner: Any, addTo: UIView) {
-        let nib = UINib.init(nibName: nibName, bundle: nil)
-        let view = nib.instantiate(withOwner: owner, options: nil).first as! UIView
+    /*
+     Xib with owner
+    */
+    class func fromNib<T : UIView>() -> T {
+        let owner = T(frame: CGRect.zero)
         
-        addTo.addSubview(view)
-        view.pinTo(addTo)
+        let nib = UINib(nibName: nibName, bundle: nil)
+        let nibViews = nib.instantiate(withOwner: owner, options: nil)
+        guard let view = nibViews.first as? UIView else {
+            fatalError("Error loading nib with name \(nibName)")
+        }
+        
+        owner.addSubview(view)
+        view.pinTo(owner)
+        
+        return owner
     }
     
+    private class var nibName: String {
+        let name = "\(self)".components(separatedBy: ".").first ?? ""
+        return name
+    }
+    
+    // View is parent
     func pinTo(_ view: UIView) {
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: 0).isActive = true
+        NSLayoutConstraint.activate([
+            self.topAnchor.constraint(equalTo: view.topAnchor),
+            self.leftAnchor.constraint(equalTo: view.leftAnchor),
+            self.rightAnchor.constraint(equalTo: view.rightAnchor),
+            self.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
     }
 }

@@ -63,8 +63,7 @@ class VideoCaptureViewController: UIViewController, AVCaptureFileOutputRecording
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        PhotoLibrary.saveToPhotos(url: outputFileURL, removeSourceFile: true) { saved, error in
-            
+        PhotoLibrary.moveToPhotos(url: outputFileURL) { saved, error in
             self.dismiss(animated: true, completion: nil)
         }
     }
