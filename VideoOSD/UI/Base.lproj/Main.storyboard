@@ -69,10 +69,10 @@
             </objects>
             <point key="canvasLocation" x="503" y="-674"/>
         </scene>
-        <!--VideoOSD View Controller-->
+        <!--Video Recorder View Controller-->
         <scene sceneID="I8Q-Jg-aaG">
             <objects>
-                <viewController id="CkO-4C-Gyg" customClass="VideoOSDViewController" customModule="VideoOSD" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="CkO-4C-Gyg" customClass="VideoRecorderViewController" customModule="VideoOSD" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="N5A-lq-tbk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -136,16 +136,32 @@
                     <connections>
                         <outlet property="glImageView" destination="hnN-ar-yy8" id="JBt-cd-CFp"/>
                         <outlet property="recordingButton" destination="WLL-3M-ugy" id="Qi1-YG-O7S"/>
+                        <segue destination="z7g-Tk-vdI" kind="show" id="9UC-XN-Kdr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bin-iN-edE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1589.5999999999999" y="-674.21289355322347"/>
+            <point key="canvasLocation" x="1590" y="-674"/>
         </scene>
-        <!--View Controller-->
+        <!--Video Preview Video Controller-->
+        <scene sceneID="R8C-L2-EBL">
+            <objects>
+                <viewController id="z7g-Tk-vdI" customClass="VideoPreviewVideoController" customModule="VideoOSD" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="spt-AM-idy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="6U1-KB-LK3"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FU1-oY-0Pz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2732" y="-674"/>
+        </scene>
+        <!--Video Options View Controller-->
         <scene sceneID="EoR-I2-ovd">
             <objects>
-                <viewController id="MWs-7d-jid" sceneMemberID="viewController">
+                <viewController id="MWs-7d-jid" customClass="VideoOptionsViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zdf-wT-jUk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
