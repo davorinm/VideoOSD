@@ -78,8 +78,6 @@ class VideoRecorder {
             return .error(.deviceNotFound)
         }
 
-        captureSession.sessionPreset = AVCaptureSession.Preset.medium
-
         do {
             let videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
 
@@ -144,7 +142,7 @@ class VideoRecorder {
             }
             
             //
-            assetWriter = try! AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
+            assetWriter = try AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
             
             
             //
@@ -224,7 +222,14 @@ class VideoRecorder {
     
     func changeQuality() {
         //        captureSession.sessionPreset = AVCaptureSession.Preset.medium
-        //        captureSession.sessionPreset = AVCaptureSession.Preset.high
+        
+        
+        let preset = AVCaptureSession.Preset.hd1920x1080
+        if captureSession.canSetSessionPreset(preset) {
+            captureSession.sessionPreset = preset
+        } else {
+            captureSession.sessionPreset = AVCaptureSession.Preset.high
+        }
     }
     
     func isRecording() -> Bool {
@@ -255,6 +260,9 @@ class VideoRecorder {
     
     private func captureVideoOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+        
+        // Apply orientation
+        connection.videoOrientation = AVCaptureVideoOrientation.portrait
         
         // Draw overlay
         if overlayCIImage != nil {

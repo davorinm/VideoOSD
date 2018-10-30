@@ -36,20 +36,6 @@ class VideoRecorderViewController: UIViewController {
         
         // Setup OverlayView
         overlayView = OverlayView.createFromNib()
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
