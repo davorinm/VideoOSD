@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		1E01AE262183B51C007AF872 /* VideoOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E01AE252183B51C007AF872 /* VideoOptionsViewController.swift */; };
 		1E01AE282183B5AB007AF872 /* VideoPreviewVideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */; };
-		1E213380215D78FE0018036A /* VideoRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21337F215D78FE0018036A /* VideoRecorder.swift */; };
+		1E213380215D78FE0018036A /* VideoBufferRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21337F215D78FE0018036A /* VideoBufferRecorder.swift */; };
 		1E21CCEB213480DF00AB9685 /* UIImage+FromUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEA213480DF00AB9685 /* UIImage+FromUIView.swift */; };
 		1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */; };
 		1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF02134867900AB9685 /* OverlayView.swift */; };
@@ -23,17 +23,16 @@
 		1E53CC3F2128A8F2008F1B20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E53CC3E2128A8F2008F1B20 /* Assets.xcassets */; };
 		1E53CC422128A8F2008F1B20 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E53CC402128A8F2008F1B20 /* LaunchScreen.storyboard */; };
 		1E53CC4E2128A937008F1B20 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4A2128A937008F1B20 /* VideoPlayerView.swift */; };
-		1E53CC4F2128A937008F1B20 /* VideoRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4B2128A937008F1B20 /* VideoRecordingView.swift */; };
+		1E53CC4F2128A937008F1B20 /* VideoCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4B2128A937008F1B20 /* VideoCaptureView.swift */; };
 		1E53CC512128A937008F1B20 /* VideoCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */; };
-		1E53CC56212A9BE6008F1B20 /* Tetet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC522128C6C4008F1B20 /* Tetet.swift */; };
-		1E53CC57212A9BED008F1B20 /* Bababa.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC5421295EAD008F1B20 /* Bababa.swift */; };
+		1E53CC56212A9BE6008F1B20 /* VideoComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC522128C6C4008F1B20 /* VideoComposition.swift */; };
 		1E53CC59212E1A33008F1B20 /* VideoRecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC58212E1A33008F1B20 /* VideoRecorderViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1E01AE252183B51C007AF872 /* VideoOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOptionsViewController.swift; sourceTree = "<group>"; };
 		1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewVideoController.swift; sourceTree = "<group>"; };
-		1E21337F215D78FE0018036A /* VideoRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorder.swift; sourceTree = "<group>"; };
+		1E21337F215D78FE0018036A /* VideoBufferRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBufferRecorder.swift; sourceTree = "<group>"; };
 		1E21CCEA213480DF00AB9685 /* UIImage+FromUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+FromUIView.swift"; sourceTree = "<group>"; };
 		1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableTimer.swift; sourceTree = "<group>"; };
 		1E21CCF02134867900AB9685 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
@@ -49,10 +48,9 @@
 		1E53CC412128A8F2008F1B20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1E53CC432128A8F2008F1B20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E53CC4A2128A937008F1B20 /* VideoPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
-		1E53CC4B2128A937008F1B20 /* VideoRecordingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoRecordingView.swift; sourceTree = "<group>"; };
+		1E53CC4B2128A937008F1B20 /* VideoCaptureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCaptureView.swift; sourceTree = "<group>"; };
 		1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCaptureViewController.swift; sourceTree = "<group>"; };
-		1E53CC522128C6C4008F1B20 /* Tetet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tetet.swift; sourceTree = "<group>"; };
-		1E53CC5421295EAD008F1B20 /* Bababa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bababa.swift; sourceTree = "<group>"; };
+		1E53CC522128C6C4008F1B20 /* VideoComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoComposition.swift; sourceTree = "<group>"; };
 		1E53CC58212E1A33008F1B20 /* VideoRecorderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorderViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,10 +69,10 @@
 			isa = PBXGroup;
 			children = (
 				1E21CCF22134869400AB9685 /* OverlayView */,
-				1E53CC58212E1A33008F1B20 /* VideoRecorderViewController.swift */,
+				1ED108F321A6044300C4D2BC /* VideoBuffer */,
+				1ED108F421A6047600C4D2BC /* VideoCapture */,
 				1E01AE252183B51C007AF872 /* VideoOptionsViewController.swift */,
-				1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */,
-				1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */,
+				1ED108F521A60AC700C4D2BC /* VideoPreview */,
 				1E53CC3B2128A8F1008F1B20 /* Main.storyboard */,
 				1E53CC402128A8F2008F1B20 /* LaunchScreen.storyboard */,
 			);
@@ -135,13 +133,36 @@
 		1E53CC492128A917008F1B20 /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				1E21337F215D78FE0018036A /* VideoRecorder.swift */,
-				1E53CC5421295EAD008F1B20 /* Bababa.swift */,
-				1E53CC4A2128A937008F1B20 /* VideoPlayerView.swift */,
-				1E53CC4B2128A937008F1B20 /* VideoRecordingView.swift */,
-				1E53CC522128C6C4008F1B20 /* Tetet.swift */,
+				1E53CC522128C6C4008F1B20 /* VideoComposition.swift */,
 			);
 			path = Video;
+			sourceTree = "<group>";
+		};
+		1ED108F321A6044300C4D2BC /* VideoBuffer */ = {
+			isa = PBXGroup;
+			children = (
+				1E53CC58212E1A33008F1B20 /* VideoRecorderViewController.swift */,
+				1E21337F215D78FE0018036A /* VideoBufferRecorder.swift */,
+			);
+			path = VideoBuffer;
+			sourceTree = "<group>";
+		};
+		1ED108F421A6047600C4D2BC /* VideoCapture */ = {
+			isa = PBXGroup;
+			children = (
+				1E53CC4D2128A937008F1B20 /* VideoCaptureViewController.swift */,
+				1E53CC4B2128A937008F1B20 /* VideoCaptureView.swift */,
+			);
+			path = VideoCapture;
+			sourceTree = "<group>";
+		};
+		1ED108F521A60AC700C4D2BC /* VideoPreview */ = {
+			isa = PBXGroup;
+			children = (
+				1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */,
+				1E53CC4A2128A937008F1B20 /* VideoPlayerView.swift */,
+			);
+			path = VideoPreview;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,7 +238,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E53CC57212A9BED008F1B20 /* Bababa.swift in Sources */,
 				1E21CCF4213487C200AB9685 /* UIView+Image.swift in Sources */,
 				1E01AE282183B5AB007AF872 /* VideoPreviewVideoController.swift in Sources */,
 				1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */,
@@ -229,9 +249,9 @@
 				1E53CC512128A937008F1B20 /* VideoCaptureViewController.swift in Sources */,
 				1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */,
 				1E01AE262183B51C007AF872 /* VideoOptionsViewController.swift in Sources */,
-				1E213380215D78FE0018036A /* VideoRecorder.swift in Sources */,
-				1E53CC56212A9BE6008F1B20 /* Tetet.swift in Sources */,
-				1E53CC4F2128A937008F1B20 /* VideoRecordingView.swift in Sources */,
+				1E213380215D78FE0018036A /* VideoBufferRecorder.swift in Sources */,
+				1E53CC56212A9BE6008F1B20 /* VideoComposition.swift in Sources */,
+				1E53CC4F2128A937008F1B20 /* VideoCaptureView.swift in Sources */,
 				1E53CC59212E1A33008F1B20 /* VideoRecorderViewController.swift in Sources */,
 				1E53CC4E2128A937008F1B20 /* VideoPlayerView.swift in Sources */,
 			);

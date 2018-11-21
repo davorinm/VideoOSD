@@ -1,5 +1,5 @@
 //
-//  VideoRecorder.swift
+//  VideoBufferRecorder.swift
 //  VideoOSD
 //
 //  Created by Davorin Madaric on 27/09/2018.
@@ -26,7 +26,7 @@ enum VideoRecorderError: Error {
     case internalError(Error)
 }
 
-class VideoRecorder {
+class VideoBufferRecorder {
     private(set) var status: VideoRecorderState = .unknown
     
     private let captureSession: AVCaptureSession = AVCaptureSession()
@@ -46,10 +46,11 @@ class VideoRecorder {
     
     private var sessionAtSourceTime: CMTime?
     
+    private(set) var videoSize: CGSize = CGSize(width: 1080, height: 1920)
     var displayImage: ((_ image: CIImage) -> Void)?
     
     private var imgContext: CIContext!
-    var overlayCIImage: CIImage?
+    var overlayImage: UIImage?
     
     init() {
         audioDataSampleDelegate.captureOutputDidOutput = { (output: AVCaptureOutput, sampleBuffer: CMSampleBuffer, connection: AVCaptureConnection) in
@@ -261,14 +262,23 @@ class VideoRecorder {
     private func captureVideoOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
         
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        
         // Apply orientation
         connection.videoOrientation = AVCaptureVideoOrientation.portrait
         
         // Draw overlay
-        if overlayCIImage != nil {
-            imgContext.render(overlayCIImage!,
+        
+        
+        
+        
+        if overlayImage != nil {
+            let overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
+            
+            imgContext.render(overlayCIImage,
                               to: pixelBuffer,
-                              bounds: CGRect(x: 0, y: 0, width: 500, height: 500),
+                              bounds: CGRect(x: 0, y: 0, width: 1080, height: 100),
                               colorSpace: nil)
         }
         

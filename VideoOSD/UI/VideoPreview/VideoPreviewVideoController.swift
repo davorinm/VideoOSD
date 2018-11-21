@@ -9,6 +9,7 @@
 import UIKit
 
 class VideoPreviewVideoController: UIViewController {
+    @IBOutlet private weak var videoPlayerView: VideoPlayerView!
     
     
     

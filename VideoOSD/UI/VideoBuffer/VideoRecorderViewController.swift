@@ -13,7 +13,7 @@ class VideoRecorderViewController: UIViewController {
     @IBOutlet weak var glImageView: GLKView!
     @IBOutlet weak var recordingButton: UIButton!
     
-    private var videoRecorder: VideoRecorder = VideoRecorder()
+    private var videoRecorder: VideoBufferRecorder = VideoBufferRecorder()
     private var overlayView: OverlayView!
     private var refreshTimer: CancelableTimer?
     private var ciContext: CIContext!
@@ -64,13 +64,12 @@ class VideoRecorderViewController: UIViewController {
         
         refreshTimer = CancelableTimer(timeInterval: 3, callback: { [unowned self] in
             var overlayViewFrame = self.overlayView.frame
-            overlayViewFrame.size.width = CGFloat(500)
+            overlayViewFrame.size.width = self.videoRecorder.videoSize.width
             self.overlayView.frame = overlayViewFrame
             
             self.overlayView.update("\(arc4random_uniform(55))", "\(arc4random_uniform(55))")
             
-            let overlayImage = self.overlayView.image()
-            self.videoRecorder.overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
+            self.videoRecorder.overlayImage = self.overlayView.image()
         })
     }
     
