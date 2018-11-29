@@ -1,10 +1,10 @@
-////
-////  VideoPlayerView.swift
-////  ImpactWrapConsumer
-////
-////  Created by Davorin Mađarić on 14/06/2018.
-////  Copyright © 2018 Inova. All rights reserved.
-////
+//
+//  VideoPlayerView.swift
+//  VideoOSD
+//
+//  Created by Davorin Madaric on 26/10/2018.
+//  Copyright © 2018 Davorin Madaric. All rights reserved.
+//
 
 import UIKit
 import AVKit

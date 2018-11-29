@@ -1,9 +1,9 @@
 //
 //  VideoCaptureView.swift
-//  ImpactWrapConsumer
+//  VideoOSD
 //
-//  Created by Davorin Mađarić on 11/01/2018.
-//  Copyright © 2018 Inova. All rights reserved.
+//  Created by Davorin Madaric on 27/09/2018.
+//  Copyright © 2018 Davorin Madaric. All rights reserved.
 //
 
 import UIKit

@@ -1,10 +1,10 @@
-////
-////  Tetet.swift
-////  VideoOSD
-////
-////  Created by Davorin Madaric on 18/08/2018.
-////  Copyright © 2018 Davorin Madaric. All rights reserved.
-////
+//
+//  VideoComposition.swift
+//  VideoOSD
+//
+//  Created by Davorin Madaric on 18/08/2018.
+//  Copyright © 2018 Davorin Madaric. All rights reserved.
+//
 
 import UIKit
 import AVKit
