@@ -13,6 +13,7 @@ enum VideoCaptureError: Error {
     case deviceNotFound
     case inputFailed
     case outputFailed
+    case captureSessionNotRunning
     case internalError(Error)
 }
 
@@ -64,7 +65,12 @@ class VideoCaptureView: UIView, AVCaptureFileOutputRecordingDelegate {
         }
     }
     
-    func startCapturing(to url: URL, completed: ((URL) -> Void)?, error: ((VideoCaptureError) -> Void)?) {
+    func startCapturing(to url: URL, completed: @escaping ((URL) -> Void), error: ((VideoCaptureError) -> Void)) {
+        guard captureSession.isRunning else {
+            error(.captureSessionNotRunning)
+            return
+        }
+        
         if captureSession.canAddOutput(videoFileOutput) {
             captureSession.addOutput(videoFileOutput)
             
@@ -72,13 +78,17 @@ class VideoCaptureView: UIView, AVCaptureFileOutputRecordingDelegate {
             didStartRecording = completed
             videoFileOutput.startRecording(to: url, recordingDelegate: self)
         } else {
-            error?(.outputFailed)
+            error(.outputFailed)
         }
     }
     
     func stopCapturing(completed: ((URL, Error?) -> Void)?) {
         didFinishRecording = completed
         videoFileOutput.stopRecording()
+    }
+    
+    func isCapturing() -> Bool {
+        return captureSession.isRunning
     }
     
     override func layoutSubviews() {

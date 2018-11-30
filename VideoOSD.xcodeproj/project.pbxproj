@@ -32,6 +32,7 @@
 		1EC6EF7021B07AFE009EF247 /* ObservableEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF6E21B07AFD009EF247 /* ObservableEvent.swift */; };
 		1EC6EF7121B07AFE009EF247 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF6F21B07AFD009EF247 /* Disposable.swift */; };
 		1EC6EF7421B07B3B009EF247 /* ProviderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF7321B07B3B009EF247 /* ProviderError.swift */; };
+		1ED1B99A21B1C73F0018396B /* AlertHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED1B99921B1C73F0018396B /* AlertHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		1EC6EF6E21B07AFD009EF247 /* ObservableEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableEvent.swift; sourceTree = "<group>"; };
 		1EC6EF6F21B07AFD009EF247 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		1EC6EF7321B07B3B009EF247 /* ProviderError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderError.swift; sourceTree = "<group>"; };
+		1ED1B99921B1C73F0018396B /* AlertHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				1E21CCF3213487C200AB9685 /* UIView+Image.swift */,
 				1E21CCF52134931A00AB9685 /* UIView+Xib.swift */,
 				1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */,
+				1ED1B99921B1C73F0018396B /* AlertHandler.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */,
 				1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */,
 				1E21CCEB213480DF00AB9685 /* UIImage+FromUIView.swift in Sources */,
+				1ED1B99A21B1C73F0018396B /* AlertHandler.swift in Sources */,
 				1E24CA942131423A00943AC4 /* Filters.swift in Sources */,
 				1E83D24A21AAE37900B4F7BC /* LocationProviderImpl.swift in Sources */,
 				1E53CC512128A937008F1B20 /* VideoCaptureViewController.swift in Sources */,

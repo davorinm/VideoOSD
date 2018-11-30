@@ -73,18 +73,20 @@ class VideoCaptureViewController: UIViewController, AVCaptureFileOutputRecording
     // MARK: - Actions
     
     @IBAction func startStopButtonPressed(_ sender: Any) {
-        // Stop recording
-        videoCaptureView.stopCapturing(completed: { (url, error) in
-            
-            
-        })
-        
-        videoCaptureView.startCapturing(to: URL, completed: { (url) in
-            <#code#>
-        }) { (error) in
-            <#code#>
+        if videoCaptureView!.isCapturing() {
+            // Stop recording
+            videoCaptureView.stopCapturing(completed: { (url, error) in
+                
+                
+            })
+        } else {
+            // Stop capturing
+            videoCaptureView.startCapturing(to: fileUrl, completed: { (url) in
+                print("Start capturing")
+            }) { (error) in
+                AlertHandler.showError(title: "String", message: error.localizedDescription, okActionTitle: "OK", fromViewController: self)
+            }
         }
-        
     }
     
     // MARK: - Video
