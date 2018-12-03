@@ -13,11 +13,6 @@ struct Location {
     let longitude: Double
 }
 
-struct LocationBounds {
-    let latitude: (min: Double, max: Double)
-    let longitude: (min: Double, max: Double)
-}
-
 struct LocationProviderResponse {
     let location: Location?
     let error: Error?

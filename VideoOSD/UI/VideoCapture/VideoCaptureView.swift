@@ -22,10 +22,31 @@ class VideoCaptureView: UIView, AVCaptureFileOutputRecordingDelegate {
     private let videoFileOutput = AVCaptureMovieFileOutput()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
+    private(set) var videoCaptureError: VideoCaptureError?
+    
     private var didStartRecording: ((URL) -> Void)?
     private var didFinishRecording: ((URL, Error?) -> Void)?
     
-    func createSession() -> VideoCaptureError? {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        setup()
+        
+        videoFileOutput.recordedDuration	
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setup()
+    }
+    
+    private func setup() {
+        videoCaptureError = createSession()
+        
+    }
+    
+    private func createSession() -> VideoCaptureError? {
         guard let videoCaptureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
             return .deviceNotFound
         }
@@ -85,10 +106,6 @@ class VideoCaptureView: UIView, AVCaptureFileOutputRecordingDelegate {
     func stopCapturing(completed: ((URL, Error?) -> Void)?) {
         didFinishRecording = completed
         videoFileOutput.stopRecording()
-    }
-    
-    func isCapturing() -> Bool {
-        return captureSession.isRunning
     }
     
     override func layoutSubviews() {
