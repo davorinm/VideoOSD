@@ -24,9 +24,10 @@ class MetalImageRecognitionViewController: UIViewController, UIImagePickerContro
         super.viewDidLoad()
         
         let spec = VideoSpec(fps: 3, size: CGSize(width: 1280, height: 720))
-        videoCapture = VideoCapture(cameraType: .back,
-                                    preferredSpec: spec,
-                                    previewContainer: previewView.layer)
+        videoCapture = VideoCapture()
+        videoCapture.setup(cameraType: .back,
+                           preferredSpec: spec,
+                           previewContainer: previewView.layer)
         videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
             let ciImage = CIImage(cvPixelBuffer: imageBuffer)
             guard let cgImage = self.ciContext.createCGImage(ciImage, from: ciImage.extent) else {return}

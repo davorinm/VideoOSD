@@ -31,8 +31,6 @@ class VideoCaptureView: UIView, AVCaptureFileOutputRecordingDelegate {
         super.init(frame: frame)
         
         setup()
-        
-        videoFileOutput.recordedDuration	
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -43,7 +41,6 @@ class VideoCaptureView: UIView, AVCaptureFileOutputRecordingDelegate {
     
     private func setup() {
         videoCaptureError = createSession()
-        
     }
     
     private func createSession() -> VideoCaptureError? {

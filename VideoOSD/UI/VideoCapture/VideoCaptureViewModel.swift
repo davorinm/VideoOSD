@@ -11,6 +11,7 @@ import Foundation
 class VideoCaptureViewModel {
     private(set) var isCapturing: Bool = false
     private let locationProvider: LocationProvider = LocationProviderImpl()
+    private let videoCapture: VideoCapture = VideoCapture(
     
     var startCapturing: ((_ fileUrl: URL) -> Void)?
     var stopCapturing: (() -> Void)?

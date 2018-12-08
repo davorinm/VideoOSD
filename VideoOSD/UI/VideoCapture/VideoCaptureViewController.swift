@@ -3,12 +3,10 @@ import AVFoundation
 import Photos
 
 class VideoCaptureViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
-    @IBOutlet private weak var videoCaptureView: VideoCaptureView!
-    @IBOutlet private weak var overlayView: UIView!
+    @IBOutlet private weak var previewView: UIView!
+    @IBOutlet private weak var recordingButton: UIButton!
     
     private let model: VideoCaptureViewModel = VideoCaptureViewModel()
-    
-    private var videoCaptureError: VideoCaptureError?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,8 +99,17 @@ class VideoCaptureViewController: UIViewController, AVCaptureFileOutputRecording
     
     // MARK: - Actions
     
-    @IBAction func startStopButtonPressed(_ sender: Any) {
+    @IBAction func recordingButtonPressed(_ sender: Any) {
         model.toggleCapturing()
+    }
+    
+    // MARK: Orientation
+    
+    override var shouldAutorotate: Bool {
+        get {
+            // Prevent autorotate when recording
+            return model.isCapturing
+        }
     }
     
     // MARK: - Video

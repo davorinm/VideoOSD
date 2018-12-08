@@ -17,8 +17,7 @@ struct VideoSpec {
 typealias ImageBufferHandler = ((_ imageBuffer: CVPixelBuffer, _ timestamp: CMTime, _ outputBuffer: CVPixelBuffer?) -> ())
 
 class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    
-    private let captureSession = AVCaptureSession()
+    private var captureSession: AVCaptureSession?
     private var videoDevice: AVCaptureDevice!
     private var videoConnection: AVCaptureConnection!
     private var audioConnection: AVCaptureConnection!
@@ -26,35 +25,30 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     
     var imageBufferHandler: ImageBufferHandler?
     
-    init(cameraType: CameraType, preferredSpec: VideoSpec?, previewContainer: CALayer?)
-    {
-        super.init()
+    func setup(cameraType: CameraType, preferredSpec: VideoSpec?, previewContainer: CALayer?) {
+        let captureSession = AVCaptureSession()
         
         videoDevice = cameraType.captureDevice()
         
         // setup video format
-        do {
-            captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
-            if let preferredSpec = preferredSpec {
-                // update the format with a preferred fps
-                videoDevice.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
-            }
+        captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
+        if let preferredSpec = preferredSpec {
+            // update the format with a preferred fps
+            videoDevice.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
         }
         
         // setup video device input
+        let videoDeviceInput: AVCaptureDeviceInput
         do {
-            let videoDeviceInput: AVCaptureDeviceInput
-            do {
-                videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
-            }
-            catch {
-                fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
-            }
-            guard captureSession.canAddInput(videoDeviceInput) else {
-                fatalError()
-            }
-            captureSession.addInput(videoDeviceInput)
+            videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
         }
+        catch {
+            fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
+        }
+        guard captureSession.canAddInput(videoDeviceInput) else {
+            fatalError()
+        }
+        captureSession.addInput(videoDeviceInput)
         
         // setup audio device input
         do {
@@ -121,23 +115,33 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
          preferredSize:preferredSize
          mirrored:(cameraType == CameraTypeFront)];
          */
+        
+        self.captureSession = captureSession
     }
     
     func startCapture() {
-        print("\(self.classForCoder)/" + #function)
-        if captureSession.isRunning {
-            print("already running")
+        guard let captureSession = self.captureSession else {
+            assertionFailure("Run setup")
             return
         }
+        
+        if captureSession.isRunning {
+            assertionFailure("Already running")
+        }
+        
         captureSession.startRunning()
     }
     
     func stopCapture() {
-        print("\(self.classForCoder)/" + #function)
-        if !captureSession.isRunning {
-            print("already stopped")
+        guard let captureSession = self.captureSession else {
+            assertionFailure("Run setup")
             return
         }
+        
+        if !captureSession.isRunning {
+            assertionFailure("Already stopped")
+        }
+        
         captureSession.stopRunning()
     }
     

@@ -20,8 +20,7 @@ extension AVCaptureDevice {
         return availableFormats
     }
     
-    private func formatWithHighestResolution(_ availableFormats: [AVCaptureDevice.Format]) -> AVCaptureDevice.Format?
-    {
+    private func formatWithHighestResolution(_ availableFormats: [AVCaptureDevice.Format]) -> AVCaptureDevice.Format? {
         var maxWidth: Int32 = 0
         var selectedFormat: AVCaptureDevice.Format?
         for format in availableFormats {
@@ -35,8 +34,7 @@ extension AVCaptureDevice {
         return selectedFormat
     }
     
-    private func formatFor(preferredSize: CGSize, availableFormats: [AVCaptureDevice.Format]) -> AVCaptureDevice.Format?
-    {
+    private func formatFor(preferredSize: CGSize, availableFormats: [AVCaptureDevice.Format]) -> AVCaptureDevice.Format? {
         for format in availableFormats {
             let dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
             
@@ -49,8 +47,7 @@ extension AVCaptureDevice {
     }
     
     
-    func updateFormatWithPreferredVideoSpec(preferredSpec: VideoSpec)
-    {
+    func updateFormatWithPreferredVideoSpec(preferredSpec: VideoSpec) {
         let availableFormats: [AVCaptureDevice.Format]
         if let preferredFps = preferredSpec.fps {
             availableFormats = availableFormatsFor(preferredFps: Float64(preferredFps))
