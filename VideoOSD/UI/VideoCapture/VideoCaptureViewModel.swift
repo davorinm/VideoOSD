@@ -7,14 +7,15 @@
 //
 
 import Foundation
+import UIKit
 
 class VideoCaptureViewModel {
     private(set) var isCapturing: Bool = false
     private let locationProvider: LocationProvider = LocationProviderImpl()
-    private let videoCapture: VideoCapture = VideoCapture(
+    private let videoCapture: VideoCapture = VideoCapture()
     
-    var startCapturing: ((_ fileUrl: URL) -> Void)?
-    var stopCapturing: (() -> Void)?
+    var displayImage: ((_ image: CIImage) -> Void)?
+    var didStopCapturing: ((_ fileUrl: URL) -> Void)?
     
     // MARK: - Public
     
@@ -22,6 +23,15 @@ class VideoCaptureViewModel {
         locationProvider.providerReponse.subscribe(self) { (response) in
             
             
+            
+        }
+        
+        let spec = VideoSpec(fps: 3, size: CGSize(width: 1280, height: 720))
+        videoCapture.setup(cameraType: .back,
+                           preferredSpec: spec,
+                           previewContainer: previewView.layer)
+        
+        videoCapture.imageBufferHandler = {
             
         }
     }
@@ -41,16 +51,12 @@ class VideoCaptureViewModel {
     // MARK: - Internal
     
     private func start() {
-        startCapturing?(filePath())
         locationProvider.startUpdatingLocation()
-        
         isCapturing = true
     }
     
     private func stop() {
-        stopCapturing?()
         locationProvider.stopUpdatingLocation()
-        
         isCapturing = false
     }
     

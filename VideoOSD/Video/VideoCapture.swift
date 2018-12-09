@@ -8,7 +8,6 @@
 import AVFoundation
 import Foundation
 
-
 struct VideoSpec {
     var fps: Int32?
     var size: CGSize?
@@ -22,6 +21,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     private var videoConnection: AVCaptureConnection!
     private var audioConnection: AVCaptureConnection!
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    private var assetWriter: AVAssetWriter!
     
     var imageBufferHandler: ImageBufferHandler?
     
@@ -31,24 +31,28 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         videoDevice = cameraType.captureDevice()
         
         // setup video format
-        captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
-        if let preferredSpec = preferredSpec {
-            // update the format with a preferred fps
-            videoDevice.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
+        do {
+            captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
+            if let preferredSpec = preferredSpec {
+                // update the format with a preferred fps
+                videoDevice.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
+            }
         }
         
         // setup video device input
-        let videoDeviceInput: AVCaptureDeviceInput
         do {
-            videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
+            let videoDeviceInput: AVCaptureDeviceInput
+            do {
+                videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
+            }
+            catch {
+                fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
+            }
+            guard captureSession.canAddInput(videoDeviceInput) else {
+                fatalError()
+            }
+            captureSession.addInput(videoDeviceInput)
         }
-        catch {
-            fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
-        }
-        guard captureSession.canAddInput(videoDeviceInput) else {
-            fatalError()
-        }
-        captureSession.addInput(videoDeviceInput)
         
         // setup audio device input
         do {
@@ -106,6 +110,19 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         
         // setup asset writer
         do {
+            assetWriter = try AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
+            
+            let outputSettings = videoDataOutput.recommendedVideoSettingsForAssetWriter(writingTo: AVFileType.mov)
+            
+            assetWriterInputVideo = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
+            assetWriterInputVideo.expectsMediaDataInRealTime = true
+            assetWriter.add(assetWriterInputVideo)
+            
+            let audioOutputSettings = audioDataOutput.recommendedAudioSettingsForAssetWriter(writingTo: AVFileType.mov) as! [String : Any]
+            
+            assetWriterInputAudio = AVAssetWriterInput(mediaType: AVMediaType.audio, outputSettings: audioOutputSettings)
+            assetWriterInputAudio.expectsMediaDataInRealTime = true
+            assetWriter.add(assetWriterInputAudio)
         }
         /*
          
@@ -143,13 +160,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         }
         
         captureSession.stopRunning()
-    }
-    
-    func resizePreview() {
-        if let previewLayer = previewLayer {
-            guard let superlayer = previewLayer.superlayer else {return}
-            previewLayer.frame = superlayer.bounds
-        }
     }
     
     // =========================================================================

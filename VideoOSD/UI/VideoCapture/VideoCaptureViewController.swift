@@ -1,31 +1,53 @@
 import UIKit
-import AVFoundation
-import Photos
+//import AVFoundation
+//import Photos
+import GLKit
 
-class VideoCaptureViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
-    @IBOutlet private weak var previewView: UIView!
+class VideoCaptureViewController: UIViewController {
+    @IBOutlet private weak var glImageView: GLKView!
     @IBOutlet private weak var recordingButton: UIButton!
     
+    private var ciContext: CIContext!
+    private var overlayView: OverlayView!
+
     private let model: VideoCaptureViewModel = VideoCaptureViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        model.startCapturing = { [unowned self] (fileUrl) in
-            // Start capturing
-            self.videoCaptureView.startCapturing(to: fileUrl, completed: { (url) in
-                print("Start capturing")
-            }) { (error) in
-                AlertHandler.showError(title: "String", message: error.localizedDescription, okActionTitle: "OK", fromViewController: self)
-            }
+        // Setup GLView
+        let glContext = EAGLContext(api: .openGLES2)
+        glImageView.context = glContext!
+        EAGLContext.setCurrent(glContext)
+        ciContext = CIContext(eaglContext: glImageView.context)
+        
+        // Image
+        model.displayImage = { image in
+            self.glImageView.bindDrawable()
+            self.ciContext.draw(image, in: image.extent, from: image.extent)
+            self.glImageView.display()
         }
         
-        model.stopCapturing = { [unowned self] in
-            // Stop recording
-            self.videoCaptureView.stopCapturing(completed: { (url, error) in
+        // Setup OverlayView
+        overlayView = OverlayView.createFromNib()
+        
+        // Finish recording
+        model.didStopCapturing = { [unowned self] (fileUrl) in
+            // Move video
+            PhotoLibrary.moveToPhotos(url: fileUrl) { saved, error in
+                if let error = error {
+                    AlertHandler.showError(title: "ERROR",
+                                           message: error.localizedDescription,
+                                           okActionTitle: "OK",
+                                           fromViewController: self)
+                    return
+                }
                 
-                
-            })
+                AlertHandler.showError(title: "SUCESS",
+                                       message: "Video saved to Photos",
+                                       okActionTitle: "OK",
+                                       fromViewController: self)
+            }
         }
         
         model.load()
@@ -40,27 +62,13 @@ class VideoCaptureViewController: UIViewController, AVCaptureFileOutputRecording
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let error = videoCaptureView.videoCaptureError {
-            switch error {
-            case .deviceNotFound:
-                AlertHandler.showError(title: "String", message: "waa", okActionTitle: "OK", fromViewController: self)
-            case .inputFailed:
-                AlertHandler.showError(title: "String", message: "waa", okActionTitle: "OK", fromViewController: self)
-            case .outputFailed:
-                AlertHandler.showError(title: "String", message: "waa", okActionTitle: "OK", fromViewController: self)
-            case .captureSessionNotRunning:
-                AlertHandler.showError(title: "String", message: "waa", okActionTitle: "OK", fromViewController: self)
-            case .internalError(let error):
-                AlertHandler.showError(title: "String", message: error.localizedDescription, okActionTitle: "OK", fromViewController: self)
-            }
-        }
     }
     
     // MARK: - Rotation
     
-//    override var shouldAutorotate: Bool {
-//        return false
-//    }
+    override var shouldAutorotate: Bool {
+        return !model.isCapturing
+    }
     
 //    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 //        super.viewWillTransition(to: size, with: coordinator)
@@ -97,56 +105,17 @@ class VideoCaptureViewController: UIViewController, AVCaptureFileOutputRecording
 //        })
 //    }
     
+    // MARK: - Layout
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        
+    }
+    
     // MARK: - Actions
     
     @IBAction func recordingButtonPressed(_ sender: Any) {
         model.toggleCapturing()
-    }
-    
-    // MARK: Orientation
-    
-    override var shouldAutorotate: Bool {
-        get {
-            // Prevent autorotate when recording
-            return model.isCapturing
-        }
-    }
-    
-    // MARK: - Video
-    
-//    private func updateVideoOrientation() {
-//        guard let previewLayer = self.previewLayer else {
-//            return
-//        }
-//        guard previewLayer.connection?.isVideoOrientationSupported ?? false else {
-//            print("isVideoOrientationSupported is false")
-//            return
-//        }
-//
-//        let deviceOrientation = UIDevice.current.orientation
-//
-//
-//        let videoOrientation: AVCaptureVideoOrientation = statusBarOrientation.videoOrientation ?? .portrait
-//
-//        if previewLayer.connection.videoOrientation == videoOrientation {
-//            print("no change to videoOrientation")
-//            return
-//        }
-//
-//        previewLayer.frame = cameraView.bounds
-//        previewLayer.connection.videoOrientation = videoOrientation
-//        previewLayer.removeAllAnimations()
-//    }
-    
-    // MARK: - AVCaptureFileOutputRecordingDelegate
-    
-    func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-        
-    }
-    
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        PhotoLibrary.moveToPhotos(url: outputFileURL) { saved, error in
-            self.dismiss(animated: true, completion: nil)
-        }
     }
 }

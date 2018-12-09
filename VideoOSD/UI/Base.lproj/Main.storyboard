@@ -19,55 +19,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="jcM-QI-Esl" kind="relationship" relationship="rootViewController" id="g65-mI-2ma"/>
+                        <segue destination="CkO-4C-Gyg" kind="relationship" relationship="rootViewController" id="BfJ-l8-DNK"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fpE-09-SqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-226" y="-674"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="aYD-tq-7vv">
-            <objects>
-                <viewController id="jcM-QI-Esl" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Efj-Up-YlH">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="32r-UY-Mf8">
-                                <rect key="frame" x="30" y="94" width="315" height="45"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="SaF-nx-zMh"/>
-                                </constraints>
-                                <state key="normal" title="PlainRecorder"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LRn-GL-kWi">
-                                <rect key="frame" x="30" y="169" width="315" height="45"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="95a-8a-B8k"/>
-                                </constraints>
-                                <state key="normal" title="FrameRecorder"/>
-                                <connections>
-                                    <segue destination="CkO-4C-Gyg" kind="show" id="UaO-TZ-pgv"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="LRn-GL-kWi" firstAttribute="top" secondItem="32r-UY-Mf8" secondAttribute="bottom" constant="30" id="7PD-NR-flc"/>
-                            <constraint firstItem="Yku-f0-8vG" firstAttribute="trailing" secondItem="32r-UY-Mf8" secondAttribute="trailing" constant="30" id="BYK-aY-9OV"/>
-                            <constraint firstItem="32r-UY-Mf8" firstAttribute="top" secondItem="Yku-f0-8vG" secondAttribute="top" constant="30" id="THe-vH-RZb"/>
-                            <constraint firstItem="32r-UY-Mf8" firstAttribute="leading" secondItem="Yku-f0-8vG" secondAttribute="leading" constant="30" id="l50-Qe-OkG"/>
-                            <constraint firstItem="LRn-GL-kWi" firstAttribute="leading" secondItem="Yku-f0-8vG" secondAttribute="leading" constant="30" id="nWp-en-Lte"/>
-                            <constraint firstItem="Yku-f0-8vG" firstAttribute="trailing" secondItem="LRn-GL-kWi" secondAttribute="trailing" constant="30" id="xa6-AE-26b"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="Yku-f0-8vG"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="vHI-mY-eEz"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cTO-gU-r4g" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="682" y="-674"/>
+            <point key="canvasLocation" x="447" y="-674"/>
         </scene>
         <!--Video Capture View Controller-->
         <scene sceneID="I8Q-Jg-aaG">
