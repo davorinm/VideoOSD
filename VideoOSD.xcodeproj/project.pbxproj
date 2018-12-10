@@ -32,13 +32,26 @@
 		1EBC0CC621B5D39F00C32420 /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */; };
 		1EBC0CC821B5D3C300C32420 /* VideoCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */; };
 		1EBC0CCA21B5D3E800C32420 /* AVCaptureDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Extension.swift */; };
-		1EBC0CCC21B5D44300C32420 /* MetalImageRecognitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CCB21B5D44300C32420 /* MetalImageRecognitionViewController.swift */; };
 		1EC6EF7021B07AFE009EF247 /* ObservableEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF6E21B07AFD009EF247 /* ObservableEvent.swift */; };
 		1EC6EF7121B07AFE009EF247 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF6F21B07AFD009EF247 /* Disposable.swift */; };
 		1EC6EF7421B07B3B009EF247 /* ProviderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF7321B07B3B009EF247 /* ProviderError.swift */; };
 		1ED1B99A21B1C73F0018396B /* AlertHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED1B99921B1C73F0018396B /* AlertHandler.swift */; };
 		1EEC48E221B71E6A00FE7B99 /* VideoOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC48E121B71E6A00FE7B99 /* VideoOptionsViewModel.swift */; };
+		721CBFEA21BE693A00C89C92 /* DateTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFE921BE693A00C89C92 /* DateTimeFormatter.swift */; };
+		721CBFF221BE6AA400C89C92 /* VideoOSDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFF121BE6AA400C89C92 /* VideoOSDTests.swift */; };
+		721CBFFA21BE6ABD00C89C92 /* DateTimeFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFF921BE6ABD00C89C92 /* DateTimeFormatterTests.swift */; };
+		721CBFFB21BE6AE400C89C92 /* DateTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFE921BE693A00C89C92 /* DateTimeFormatter.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		721CBFF421BE6AA400C89C92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E53CC2C2128A8F1008F1B20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E53CC332128A8F1008F1B20;
+			remoteInfo = VideoOSD;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1E01AE252183B51C007AF872 /* VideoOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOptionsViewController.swift; sourceTree = "<group>"; };
@@ -72,16 +85,27 @@
 		1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
 		1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCameraType.swift; sourceTree = "<group>"; };
 		1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Extension.swift"; sourceTree = "<group>"; };
-		1EBC0CCB21B5D44300C32420 /* MetalImageRecognitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalImageRecognitionViewController.swift; sourceTree = "<group>"; };
 		1EC6EF6E21B07AFD009EF247 /* ObservableEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableEvent.swift; sourceTree = "<group>"; };
 		1EC6EF6F21B07AFD009EF247 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		1EC6EF7321B07B3B009EF247 /* ProviderError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderError.swift; sourceTree = "<group>"; };
 		1ED1B99921B1C73F0018396B /* AlertHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHandler.swift; sourceTree = "<group>"; };
 		1EEC48E121B71E6A00FE7B99 /* VideoOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOptionsViewModel.swift; sourceTree = "<group>"; };
+		721CBFE921BE693A00C89C92 /* DateTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeFormatter.swift; sourceTree = "<group>"; };
+		721CBFEF21BE6AA400C89C92 /* VideoOSDTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VideoOSDTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		721CBFF121BE6AA400C89C92 /* VideoOSDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOSDTests.swift; sourceTree = "<group>"; };
+		721CBFF321BE6AA400C89C92 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		721CBFF921BE6ABD00C89C92 /* DateTimeFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeFormatterTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1E53CC312128A8F1008F1B20 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		721CBFEC21BE6AA400C89C92 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -124,6 +148,7 @@
 				1E21CCF52134931A00AB9685 /* UIView+Xib.swift */,
 				1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */,
 				1ED1B99921B1C73F0018396B /* AlertHandler.swift */,
+				721CBFE921BE693A00C89C92 /* DateTimeFormatter.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -132,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				1E53CC362128A8F1008F1B20 /* VideoOSD */,
+				721CBFF021BE6AA400C89C92 /* VideoOSDTests */,
 				1E53CC352128A8F1008F1B20 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -140,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				1E53CC342128A8F1008F1B20 /* VideoOSD.app */,
+				721CBFEF21BE6AA400C89C92 /* VideoOSDTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -223,7 +250,6 @@
 				1E53CC58212E1A33008F1B20 /* VideoRecorderViewController.swift */,
 				1E21337F215D78FE0018036A /* VideoBufferRecorder.swift */,
 				1EBC0CC021B5D0FF00C32420 /* AttributedSpeechViewController.swift */,
-				1EBC0CCB21B5D44300C32420 /* MetalImageRecognitionViewController.swift */,
 				1EBC0CC221B5D16100C32420 /* MainTest.storyboard */,
 			);
 			path = Temp;
@@ -236,6 +262,16 @@
 				1EEC48E121B71E6A00FE7B99 /* VideoOptionsViewModel.swift */,
 			);
 			path = VideoOptions;
+			sourceTree = "<group>";
+		};
+		721CBFF021BE6AA400C89C92 /* VideoOSDTests */ = {
+			isa = PBXGroup;
+			children = (
+				721CBFF121BE6AA400C89C92 /* VideoOSDTests.swift */,
+				721CBFF921BE6ABD00C89C92 /* DateTimeFormatterTests.swift */,
+				721CBFF321BE6AA400C89C92 /* Info.plist */,
+			);
+			path = VideoOSDTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,19 +294,41 @@
 			productReference = 1E53CC342128A8F1008F1B20 /* VideoOSD.app */;
 			productType = "com.apple.product-type.application";
 		};
+		721CBFEE21BE6AA400C89C92 /* VideoOSDTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 721CBFF621BE6AA400C89C92 /* Build configuration list for PBXNativeTarget "VideoOSDTests" */;
+			buildPhases = (
+				721CBFEB21BE6AA400C89C92 /* Sources */,
+				721CBFEC21BE6AA400C89C92 /* Frameworks */,
+				721CBFED21BE6AA400C89C92 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				721CBFF521BE6AA400C89C92 /* PBXTargetDependency */,
+			);
+			name = VideoOSDTests;
+			productName = VideoOSDTests;
+			productReference = 721CBFEF21BE6AA400C89C92 /* VideoOSDTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		1E53CC2C2128A8F1008F1B20 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0940;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Davorin Madaric";
 				TargetAttributes = {
 					1E53CC332128A8F1008F1B20 = {
 						CreatedOnToolsVersion = 9.4.1;
 						LastSwiftMigration = 1000;
+					};
+					721CBFEE21BE6AA400C89C92 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = 1E53CC332128A8F1008F1B20;
 					};
 				};
 			};
@@ -288,6 +346,7 @@
 			projectRoot = "";
 			targets = (
 				1E53CC332128A8F1008F1B20 /* VideoOSD */,
+				721CBFEE21BE6AA400C89C92 /* VideoOSDTests */,
 			);
 		};
 /* End PBXProject section */
@@ -302,6 +361,13 @@
 				1E4A067A2150400400DC4E47 /* OverlayView.xib in Resources */,
 				1E53CC3F2128A8F2008F1B20 /* Assets.xcassets in Resources */,
 				1E53CC3D2128A8F1008F1B20 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		721CBFED21BE6AA400C89C92 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,16 +398,34 @@
 				1EC6EF7421B07B3B009EF247 /* ProviderError.swift in Sources */,
 				1EEC48E221B71E6A00FE7B99 /* VideoOptionsViewModel.swift in Sources */,
 				1EBC0CC621B5D39F00C32420 /* VideoCapture.swift in Sources */,
-				1EBC0CCC21B5D44300C32420 /* MetalImageRecognitionViewController.swift in Sources */,
 				1E01AE262183B51C007AF872 /* VideoOptionsViewController.swift in Sources */,
 				1EBC0CC821B5D3C300C32420 /* VideoCameraType.swift in Sources */,
 				1EC6EF7121B07AFE009EF247 /* Disposable.swift in Sources */,
+				721CBFEA21BE693A00C89C92 /* DateTimeFormatter.swift in Sources */,
 				1E53CC4E2128A937008F1B20 /* VideoPlayerView.swift in Sources */,
 				1EC6EF7021B07AFE009EF247 /* ObservableEvent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		721CBFEB21BE6AA400C89C92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				721CBFF221BE6AA400C89C92 /* VideoOSDTests.swift in Sources */,
+				721CBFFB21BE6AE400C89C92 /* DateTimeFormatter.swift in Sources */,
+				721CBFFA21BE6ABD00C89C92 /* DateTimeFormatterTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		721CBFF521BE6AA400C89C92 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E53CC332128A8F1008F1B20 /* VideoOSD */;
+			targetProxy = 721CBFF421BE6AA400C89C92 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		1E53CC3B2128A8F1008F1B20 /* Main.storyboard */ = {
@@ -513,6 +597,49 @@
 			};
 			name = Release;
 		};
+		721CBFF721BE6AA400C89C92 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = VideoOSDTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = si.inova.VideoOSDTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VideoOSD.app/VideoOSD";
+			};
+			name = Debug;
+		};
+		721CBFF821BE6AA400C89C92 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = VideoOSDTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = si.inova.VideoOSDTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VideoOSD.app/VideoOSD";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -530,6 +657,15 @@
 			buildConfigurations = (
 				1E53CC472128A8F2008F1B20 /* Debug */,
 				1E53CC482128A8F2008F1B20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		721CBFF621BE6AA400C89C92 /* Build configuration list for PBXNativeTarget "VideoOSDTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				721CBFF721BE6AA400C89C92 /* Debug */,
+				721CBFF821BE6AA400C89C92 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

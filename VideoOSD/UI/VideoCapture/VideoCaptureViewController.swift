@@ -5,6 +5,7 @@ import GLKit
 
 class VideoCaptureViewController: UIViewController {
     @IBOutlet private weak var glImageView: GLKView!
+    @IBOutlet private weak var timeLabel: UILabel!
     @IBOutlet private weak var recordingButton: UIButton!
     
     private var ciContext: CIContext!
@@ -21,8 +22,12 @@ class VideoCaptureViewController: UIViewController {
         EAGLContext.setCurrent(glContext)
         ciContext = CIContext(eaglContext: glImageView.context)
         
-        // Image
-        model.displayImage = { image in
+        // Video data
+        model.displayImage = { [unowned self] (image, timestamp) in
+            // Time
+            self.timeLabel.text = DateTimeFormatter.formatTime(time: timestamp)
+            
+            // Draw image
             self.glImageView.bindDrawable()
             self.ciContext.draw(image, in: image.extent, from: image.extent)
             self.glImageView.display()
@@ -56,12 +61,13 @@ class VideoCaptureViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-//        model.
+        model.start()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         
+        model.stop()
     }
     
     // MARK: - Rotation

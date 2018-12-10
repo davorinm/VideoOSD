@@ -5,27 +5,30 @@
 //  Copyright © 2016 Shuichi Tsutsumi. All rights reserved.
 //
 
-import AVFoundation
 import Foundation
+import AVFoundation
+import UIKit
 
 struct VideoSpec {
     var fps: Int32?
     var size: CGSize?
 }
 
-typealias ImageBufferHandler = ((_ imageBuffer: CVPixelBuffer, _ timestamp: CMTime, _ outputBuffer: CVPixelBuffer?) -> ())
-
 class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     private var captureSession: AVCaptureSession?
     private var videoDevice: AVCaptureDevice!
     private var videoConnection: AVCaptureConnection!
     private var audioConnection: AVCaptureConnection!
-    private var previewLayer: AVCaptureVideoPreviewLayer?
-    private var assetWriter: AVAssetWriter!
+    private var assetWriter: AssetWriter!
     
-    var imageBufferHandler: ImageBufferHandler?
+    var isRecording: Bool {
+        get {
+            return assetWriter.isWriting
+        }
+    }
+    var imageHandler: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
     
-    func setup(cameraType: CameraType, preferredSpec: VideoSpec?, previewContainer: CALayer?) {
+    func setup(cameraType: CameraType, preferredSpec: VideoSpec?, fileUrl: URL) {
         let captureSession = AVCaptureSession()
         
         videoDevice = cameraType.captureDevice()
@@ -70,19 +73,9 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             captureSession.addInput(audioDeviceInput)
         }
         
-        // setup preview
-        if let previewContainer = previewContainer {
-            let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-            previewLayer.frame = previewContainer.bounds
-            previewLayer.contentsGravity = CALayerContentsGravity.resizeAspectFill
-            previewLayer.videoGravity = .resizeAspectFill
-            previewContainer.insertSublayer(previewLayer, at: 0)
-            self.previewLayer = previewLayer
-        }
-        
         // setup video output
+        let videoDataOutput = AVCaptureVideoDataOutput()
         do {
-            let videoDataOutput = AVCaptureVideoDataOutput()
             videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_32BGRA)]
             videoDataOutput.alwaysDiscardsLateVideoFrames = true
             let queue = DispatchQueue(label: "com.shu223.videosamplequeue")
@@ -96,8 +89,8 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         }
         
         // setup audio output
+        let audioDataOutput = AVCaptureAudioDataOutput()
         do {
-            let audioDataOutput = AVCaptureAudioDataOutput()
             let queue = DispatchQueue(label: "com.shu223.audiosamplequeue")
             audioDataOutput.setSampleBufferDelegate(self, queue: queue)
             guard captureSession.canAddOutput(audioDataOutput) else {
@@ -110,33 +103,17 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         
         // setup asset writer
         do {
-            assetWriter = try AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
-            
-            let outputSettings = videoDataOutput.recommendedVideoSettingsForAssetWriter(writingTo: AVFileType.mov)
-            
-            assetWriterInputVideo = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
-            assetWriterInputVideo.expectsMediaDataInRealTime = true
-            assetWriter.add(assetWriterInputVideo)
-            
-            let audioOutputSettings = audioDataOutput.recommendedAudioSettingsForAssetWriter(writingTo: AVFileType.mov) as! [String : Any]
-            
-            assetWriterInputAudio = AVAssetWriterInput(mediaType: AVMediaType.audio, outputSettings: audioOutputSettings)
-            assetWriterInputAudio.expectsMediaDataInRealTime = true
-            assetWriter.add(assetWriterInputAudio)
+            assetWriter = try AssetWriter(fileUrl: fileUrl)
+        } catch let error {
+            assertionFailure(error.localizedDescription)
         }
-        /*
-         
-         // Asset Writer
-         self.assetWriterManager = [[TTMAssetWriterManager alloc] initWithVideoDataOutput:videoDataOutput
-         audioDataOutput:audioDataOutput
-         preferredSize:preferredSize
-         mirrored:(cameraType == CameraTypeFront)];
-         */
         
         self.captureSession = captureSession
     }
     
-    func startCapture() {
+    // MARK: - Controls
+    
+    func startSession() {
         guard let captureSession = self.captureSession else {
             assertionFailure("Run setup")
             return
@@ -149,7 +126,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         captureSession.startRunning()
     }
     
-    func stopCapture() {
+    func stopSession() {
         guard let captureSession = self.captureSession else {
             assertionFailure("Run setup")
             return
@@ -162,7 +139,16 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         captureSession.stopRunning()
     }
     
-    // =========================================================================
+    func startRecording() {
+        assetWriter.start()
+    }
+    
+    func stopRecording(finished: @escaping (() -> Void)) {
+        assetWriter.stop {
+            finished()
+        }
+    }
+    
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -170,16 +156,27 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        // FIXME: temp
-        if connection.videoOrientation != .portrait {
-            connection.videoOrientation = .portrait
-            return
+        // Apply orientation
+        if connection.videoOrientation != AVCaptureVideoOrientation.portrait {
+            connection.videoOrientation = AVCaptureVideoOrientation.portrait
         }
         
-        if let imageBufferHandler = imageBufferHandler, let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) , connection == videoConnection
-        {
-            let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            imageBufferHandler(imageBuffer, timestamp, nil)
+        // Get PixelBuffer
+        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+        
+        // Draw overlay
+        // TODO: todo
+        
+        // Append sample
+        assetWriter.append()
+        
+        // Display Pixel Buffer
+        let image = CIImage(cvPixelBuffer: pixelBuffer)
+        let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+        let time: TimeInterval = CMTimeGetSeconds(timestamp)
+        
+        DispatchQueue.main.async {
+            self.imageHandler?(image, time)
         }
     }
 }

@@ -14,7 +14,7 @@ class VideoCaptureViewModel {
     private let locationProvider: LocationProvider = LocationProviderImpl()
     private let videoCapture: VideoCapture = VideoCapture()
     
-    var displayImage: ((_ image: CIImage) -> Void)?
+    var displayImage: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
     var didStopCapturing: ((_ fileUrl: URL) -> Void)?
     
     // MARK: - Public
@@ -26,38 +26,34 @@ class VideoCaptureViewModel {
             
         }
         
-        let spec = VideoSpec(fps: 3, size: CGSize(width: 1280, height: 720))
-        videoCapture.setup(cameraType: .back,
-                           preferredSpec: spec,
-                           previewContainer: previewView.layer)
-        
-        videoCapture.imageBufferHandler = {
-            
+        videoCapture.imageHandler = { [unowned self] (image, time) in
+            self.displayImage?(image, time)
         }
     }
     
     func load() {
-        
+        let spec = VideoSpec(fps: 3, size: CGSize(width: 1280, height: 720))
+        videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec, fileUrl: filePath())
+    }
+    
+    func start() {
+        videoCapture.startSession()
+        locationProvider.startUpdatingLocation()
+    }
+    
+    func stop() {
+        videoCapture.stopSession()
+        locationProvider.stopUpdatingLocation()
     }
     
     func toggleCapturing() {
-        if isCapturing {
-            stop()
+        if videoCapture.isRecording {
+            videoCapture.stopRecording {
+                print("stopped Recording")
+            }
         } else {
-            start()
+            videoCapture.startRecording()
         }
-    }
-    
-    // MARK: - Internal
-    
-    private func start() {
-        locationProvider.startUpdatingLocation()
-        isCapturing = true
-    }
-    
-    private func stop() {
-        locationProvider.stopUpdatingLocation()
-        isCapturing = false
     }
     
     // MARK: - Helpers
