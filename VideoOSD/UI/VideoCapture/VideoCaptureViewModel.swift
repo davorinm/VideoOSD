@@ -8,11 +8,20 @@
 
 import Foundation
 import UIKit
+import CoreLocation
 
 class VideoCaptureViewModel {
-    private(set) var isCapturing: Bool = false
+    var isCapturing: Bool {
+        get {
+            return videoCapture.isRecording
+        }
+    }
     private let locationProvider: LocationProvider = LocationProviderImpl()
+    
+    private var filePath: URL!
     private let videoCapture: VideoCapture = VideoCapture()
+    
+    private var overlayView: OverlayView!
     
     var displayImage: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
     var didStopCapturing: ((_ fileUrl: URL) -> Void)?
@@ -20,10 +29,15 @@ class VideoCaptureViewModel {
     // MARK: - Public
     
     init() {
+        // Create OverlayView
+        overlayView = OverlayView.createFromNib()
+        
         locationProvider.providerReponse.subscribe(self) { (response) in
-            
-            
-            
+            if let location = response.location {
+                self.updateLocation(location: location)
+            } else {
+                assertionFailure("Location error \(response.error!)")
+            }
         }
         
         videoCapture.imageHandler = { [unowned self] (image, time) in
@@ -32,8 +46,10 @@ class VideoCaptureViewModel {
     }
     
     func load() {
-        let spec = VideoSpec(fps: 3, size: CGSize(width: 1280, height: 720))
-        videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec, fileUrl: filePath())
+        filePath = createFilePath()
+        
+        let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
+        videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec, fileUrl: filePath)
     }
     
     func start() {
@@ -46,19 +62,37 @@ class VideoCaptureViewModel {
         locationProvider.stopUpdatingLocation()
     }
     
-    func toggleCapturing() {
-        if videoCapture.isRecording {
-            videoCapture.stopRecording {
-                print("stopped Recording")
+    func startCapturing() {
+        videoCapture.startRecording()
+    }
+    
+    func stopCapturing(completition: @escaping ((_ sucess: Bool, _ error: Error?) -> ())) {
+        videoCapture.stopRecording { [unowned self] in
+            PhotoLibrary.moveToPhotos(url: self.filePath) { (saved, error) in
+                if saved {
+                    completition(true, nil)
+                } else {
+                    completition(false, error)
+                }
             }
-        } else {
-            videoCapture.startRecording()
         }
+    }
+    
+    // MARK: - Location
+    
+    private func updateLocation(location: CLLocation) {
+        var overlayViewFrame = self.overlayView.frame
+        overlayViewFrame.size = CGSize(width: 1280, height: 720)
+        self.overlayView.frame = overlayViewFrame
+        
+        overlayView.update("\(location.speed)", "\(location.course)")
+        
+        videoCapture.overlayImage = self.overlayView.image()
     }
     
     // MARK: - Helpers
     
-    private func filePath() -> URL {
+    private func createFilePath() -> URL {
         // Path for output file
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let fileUrl = paths[0].appendingPathComponent("output.mov")

@@ -17,13 +17,20 @@ struct VideoSpec {
 class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     private var captureSession: AVCaptureSession?
     private var videoDevice: AVCaptureDevice!
-    private var videoConnection: AVCaptureConnection!
-    private var audioConnection: AVCaptureConnection!
-    private var assetWriter: AssetWriter!
+    private var videoDataOutput: AVCaptureVideoDataOutput!
+    private var audioDataOutput: AVCaptureAudioDataOutput!
+    
+    private var assetWriter: AVAssetWriter!
+    private var assetWriterInputVideo: AVAssetWriterInput!
+    private var assetWriterInputAudio: AVAssetWriterInput!
+    
+    private var sessionAtSourceTime: CMTime?
+    private var imgContext: CIContext!
+    var overlayImage: UIImage?
     
     var isRecording: Bool {
         get {
-            return assetWriter.isWriting
+            return assetWriter.status == .writing
         }
     }
     var imageHandler: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
@@ -44,71 +51,81 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         
         // setup video device input
         do {
-            let videoDeviceInput: AVCaptureDeviceInput
             do {
-                videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
-            }
-            catch {
+                let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
+                guard captureSession.canAddInput(videoDeviceInput) else {
+                    fatalError("Error adding videoDeviceInput")
+                }
+                captureSession.addInput(videoDeviceInput)
+            } catch let error {
                 fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
             }
-            guard captureSession.canAddInput(videoDeviceInput) else {
-                fatalError()
-            }
-            captureSession.addInput(videoDeviceInput)
         }
         
         // setup audio device input
         do {
-            guard let audioDevice = AVCaptureDevice.default(for: .audio) else {fatalError()}
-            let audioDeviceInput: AVCaptureDeviceInput
-            do {
-                audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
+            guard let audioDevice = AVCaptureDevice.default(for: .audio) else {
+                fatalError("Error finding audioDevice")
             }
-            catch {
+            do {
+                let audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
+                guard captureSession.canAddInput(audioDeviceInput) else {
+                    fatalError("Error adding audioDeviceInput")
+                }
+                captureSession.addInput(audioDeviceInput)
+            } catch let error {
                 fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
             }
-            guard captureSession.canAddInput(audioDeviceInput) else {
-                fatalError()
-            }
-            captureSession.addInput(audioDeviceInput)
         }
         
         // setup video output
-        let videoDataOutput = AVCaptureVideoDataOutput()
         do {
+            let queue = DispatchQueue(label: "com.shu223.videosamplequeue")
+            let videoDataOutput = AVCaptureVideoDataOutput()
             videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_32BGRA)]
             videoDataOutput.alwaysDiscardsLateVideoFrames = true
-            let queue = DispatchQueue(label: "com.shu223.videosamplequeue")
             videoDataOutput.setSampleBufferDelegate(self, queue: queue)
             guard captureSession.canAddOutput(videoDataOutput) else {
-                fatalError()
+                fatalError("Error adding videoDataOutput")
             }
             captureSession.addOutput(videoDataOutput)
-            
-            videoConnection = videoDataOutput.connection(with: .video)
         }
         
         // setup audio output
-        let audioDataOutput = AVCaptureAudioDataOutput()
         do {
             let queue = DispatchQueue(label: "com.shu223.audiosamplequeue")
+            let audioDataOutput = AVCaptureAudioDataOutput()
             audioDataOutput.setSampleBufferDelegate(self, queue: queue)
             guard captureSession.canAddOutput(audioDataOutput) else {
-                fatalError()
+                fatalError("Error adding audioDataOutput")
             }
             captureSession.addOutput(audioDataOutput)
-            
-            audioConnection = audioDataOutput.connection(with: .audio)
         }
         
         // setup asset writer
         do {
-            assetWriter = try AssetWriter(fileUrl: fileUrl)
+            assetWriter = try AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
+            
+            let outputSettings = videoDataOutput.recommendedVideoSettingsForAssetWriter(writingTo: AVFileType.mov)
+            
+            assetWriterInputVideo = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
+            assetWriterInputVideo.expectsMediaDataInRealTime = true
+            assetWriter.add(assetWriterInputVideo)
+            
+            let audioOutputSettings = audioDataOutput.recommendedAudioSettingsForAssetWriter(writingTo: AVFileType.mov) as! [String : Any]
+            
+            assetWriterInputAudio = AVAssetWriterInput(mediaType: AVMediaType.audio, outputSettings: audioOutputSettings)
+            assetWriterInputAudio.expectsMediaDataInRealTime = true
+            assetWriter.add(assetWriterInputAudio)
         } catch let error {
             assertionFailure(error.localizedDescription)
         }
         
+        // Set capture session
         self.captureSession = captureSession
+        
+        // Create image context
+        self.imgContext = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
     }
     
     // MARK: - Controls
@@ -140,11 +157,11 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     func startRecording() {
-        assetWriter.start()
+        assetWriter.startWriting()
     }
     
     func stopRecording(finished: @escaping (() -> Void)) {
-        assetWriter.stop {
+        assetWriter.finishWriting {
             finished()
         }
     }
@@ -152,10 +169,28 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        //        print("\(self.classForCoder)/" + #function)
+        print("\(self.classForCoder)/" + #function)
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // Append sample
+        if assetWriter.status == .writing {
+            if sessionAtSourceTime == nil {
+                sessionAtSourceTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                assetWriter.startSession(atSourceTime: sessionAtSourceTime!)
+            }
+            
+            if output == videoDataOutput {
+                videoDataHandler(sampleBuffer: sampleBuffer, connection: connection)
+            } else if output == audioDataOutput {
+                audioDataHandler(sampleBuffer: sampleBuffer)
+            }
+        }
+    }
+    
+    // MARK: - AV Data handlers
+    
+    private func videoDataHandler(sampleBuffer: CMSampleBuffer, connection: AVCaptureConnection) {
         // Apply orientation
         if connection.videoOrientation != AVCaptureVideoOrientation.portrait {
             connection.videoOrientation = AVCaptureVideoOrientation.portrait
@@ -165,10 +200,14 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
         
         // Draw overlay
-        // TODO: todo
-        
-        // Append sample
-        assetWriter.append()
+        if overlayImage != nil {
+            let overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
+            
+            imgContext.render(overlayCIImage,
+                              to: pixelBuffer,
+                              bounds: CGRect(x: 0, y: 0, width: 1080, height: 100),
+                              colorSpace: nil)
+        }
         
         // Display Pixel Buffer
         let image = CIImage(cvPixelBuffer: pixelBuffer)
@@ -177,6 +216,26 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         
         DispatchQueue.main.async {
             self.imageHandler?(image, time)
+        }
+        
+        // Append video sample
+        if assetWriterInputVideo.isReadyForMoreMediaData {
+            if assetWriterInputVideo.append(sampleBuffer) == false {
+                if assetWriter.status == .failed {
+                    assertionFailure("AVAssetWriter error \(assetWriter.error!)")
+                }
+            }
+        }
+    }
+    
+    private func audioDataHandler(sampleBuffer: CMSampleBuffer) {
+        // Append audio sample
+        if assetWriterInputAudio.isReadyForMoreMediaData {
+            if assetWriterInputAudio.append(sampleBuffer) == false {
+                if assetWriter.status == .failed {
+                    assertionFailure("AVAssetWriter error \(assetWriter.error!)")
+                }
+            }
         }
     }
 }

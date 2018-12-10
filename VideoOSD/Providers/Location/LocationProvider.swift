@@ -7,17 +7,13 @@
 //
 
 import Foundation
-
-struct Location {
-    let latitude: Double
-    let longitude: Double
-}
+import CoreLocation
 
 struct LocationProviderResponse {
-    let location: Location?
+    let location: CLLocation?
     let error: Error?
     
-    init(location: Location) {
+    init(location: CLLocation) {
         self.location = location
         self.error = nil
     }

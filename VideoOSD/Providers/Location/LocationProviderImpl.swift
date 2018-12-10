@@ -63,7 +63,7 @@ class LocationProviderImpl: LocationProvider, LocationProviderDelegate {
             return
         }
         
-        self.providerReponse.raise(LocationProviderResponse(location: Location(latitude: firstLocation.coordinate.latitude, longitude: firstLocation.coordinate.longitude)))
+        self.providerReponse.raise(LocationProviderResponse(location: firstLocation))
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

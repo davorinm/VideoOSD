@@ -16,7 +16,6 @@
 		1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF52134931A00AB9685 /* UIView+Xib.swift */; };
 		1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA902131405200943AC4 /* PhotoLibrary.swift */; };
 		1E24CA942131423A00943AC4 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA932131423A00943AC4 /* Filters.swift */; };
-		1E4165F321BD9B0000563920 /* AssetWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4165F221BD9B0000563920 /* AssetWriter.swift */; };
 		1E4A067A2150400400DC4E47 /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4A06792150400400DC4E47 /* OverlayView.xib */; };
 		1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC372128A8F1008F1B20 /* AppDelegate.swift */; };
 		1E53CC3D2128A8F1008F1B20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E53CC3B2128A8F1008F1B20 /* Main.storyboard */; };
@@ -64,7 +63,6 @@
 		1E21CCF52134931A00AB9685 /* UIView+Xib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Xib.swift"; sourceTree = "<group>"; };
 		1E24CA902131405200943AC4 /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
 		1E24CA932131423A00943AC4 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
-		1E4165F221BD9B0000563920 /* AssetWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetWriter.swift; sourceTree = "<group>"; };
 		1E4A06792150400400DC4E47 /* OverlayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
 		1E53CC342128A8F1008F1B20 /* VideoOSD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoOSD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E53CC372128A8F1008F1B20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -192,7 +190,6 @@
 				1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */,
 				1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */,
 				1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Extension.swift */,
-				1E4165F221BD9B0000563920 /* AssetWriter.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -328,7 +325,6 @@
 					};
 					721CBFEE21BE6AA400C89C92 = {
 						CreatedOnToolsVersion = 10.1;
-						TestTargetID = 1E53CC332128A8F1008F1B20;
 					};
 				};
 			};
@@ -387,7 +383,6 @@
 				1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */,
 				1EBC0CC121B5D0FF00C32420 /* AttributedSpeechViewController.swift in Sources */,
 				1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */,
-				1E4165F321BD9B0000563920 /* AssetWriter.swift in Sources */,
 				1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */,
 				1E21CCEB213480DF00AB9685 /* UIImage+FromUIView.swift in Sources */,
 				1ED1B99A21B1C73F0018396B /* AlertHandler.swift in Sources */,
@@ -600,7 +595,6 @@
 		721CBFF721BE6AA400C89C92 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = VideoOSDTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -615,14 +609,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VideoOSD.app/VideoOSD";
 			};
 			name = Debug;
 		};
 		721CBFF821BE6AA400C89C92 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = VideoOSDTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -636,7 +628,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VideoOSD.app/VideoOSD";
 			};
 			name = Release;
 		};

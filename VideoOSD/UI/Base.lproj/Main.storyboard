@@ -47,7 +47,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                         <state key="normal" title="Rec"/>
                                         <connections>
-                                            <action selector="startButtonPressed:" destination="CkO-4C-Gyg" eventType="touchUpInside" id="QvR-Xd-xZe"/>
+                                            <action selector="recordingButtonPressed:" destination="CkO-4C-Gyg" eventType="touchUpInside" id="ekY-AO-Vn3"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VNx-M2-aLg">

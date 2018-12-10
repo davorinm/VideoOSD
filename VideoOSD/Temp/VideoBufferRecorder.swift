@@ -50,7 +50,6 @@ class VideoBufferRecorder {
     var displayImage: ((_ image: CIImage) -> Void)?
     
     private var imgContext: CIContext!
-    var overlayImage: UIImage?
     
     init() {
         audioDataSampleDelegate.captureOutputDidOutput = { (output: AVCaptureOutput, sampleBuffer: CMSampleBuffer, connection: AVCaptureConnection) in
@@ -97,22 +96,6 @@ class VideoBufferRecorder {
             }
             
             
-            
-            //        videoCaptureDevice.formats
-            //        videoCaptureDevice.activeFormat
-            
-
-            
-            
-            audioDataOutput = AVCaptureAudioDataOutput()
-            audioDataOutput.setSampleBufferDelegate(audioDataSampleDelegate, queue: delegateQueue)
-            
-            if captureSession.canAddOutput(audioDataOutput) {
-                captureSession.addOutput(audioDataOutput)
-            } else {
-                return .error(.outputFailed)
-            }
-            
             videoDataOutput = AVCaptureVideoDataOutput()
             videoDataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as NSString) : NSNumber(value: kCVPixelFormatType_32BGRA as UInt32)] as [String : Any]
             videoDataOutput.alwaysDiscardsLateVideoFrames = true
@@ -129,51 +112,6 @@ class VideoBufferRecorder {
                 return .error(.outputFailed)
             }
             
-            // Path for output file
-            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            guard let firstPath = paths.first else {
-                return .error(.pathMissing)
-            }
-            
-            fileUrl = firstPath.appendingPathComponent("output.mov")
-            
-            // Remove old file
-            if FileManager.default.fileExists(atPath: fileUrl.absoluteString) {
-                try FileManager.default.removeItem(at: fileUrl)
-            }
-            
-            //
-            assetWriter = try AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
-            
-            
-            //
-            let outputSettings = videoDataOutput.recommendedVideoSettingsForAssetWriter(writingTo: AVFileType.mov)
-            
-            
-            //
-            assetWriterInputVideo = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
-            assetWriterInputVideo.expectsMediaDataInRealTime = true
-            
-            //
-            assetWriter.add(assetWriterInputVideo)
-            
-            
-            
-            
-            
-            let audioOutputSettings = audioDataOutput.recommendedAudioSettingsForAssetWriter(writingTo: AVFileType.mov) as! [String : Any]
-            
-            
-            //
-            assetWriterInputAudio = AVAssetWriterInput(mediaType: AVMediaType.audio, outputSettings: audioOutputSettings)
-            assetWriterInputAudio.expectsMediaDataInRealTime = true
-            
-            //
-            assetWriter.add(assetWriterInputAudio)
-            
-            
-            
-            
             
             return .initialized
         } catch let error {
@@ -182,16 +120,6 @@ class VideoBufferRecorder {
         
         
         
-        // TODO: Apply orientation
-        
-        
-        
-        //        // Video orientation
-        //        for connection in videoDataOutput.connections {
-        //            if connection.isVideoOrientationSupported {
-        //                connection.videoOrientation = AVCaptureVideoOrientation.portrait
-        //            }
-        //        }
     }
     
     func startSession() {
@@ -208,19 +136,6 @@ class VideoBufferRecorder {
         }
     }
     
-    func startRecording() {
-        assetWriter.startWriting()
-        
-        // Check settings for resolution
-        //            videoDataOutput.videoSettings
-    }
-    
-    func stopRecording(finished: @escaping ((_ fileUrl: URL) -> Void)) {
-        assetWriter.finishWriting { [unowned self] in
-            finished(self.fileUrl)
-        }
-    }
-    
     func changeQuality() {
         //        captureSession.sessionPreset = AVCaptureSession.Preset.medium
         
@@ -233,88 +148,24 @@ class VideoBufferRecorder {
         }
     }
     
-    func isRecording() -> Bool {
-        if case .recording = status {
-            return true
-        }
-        
-        return false
-    }
-    
     // MARK: - Capture Audio Output
     
     private func captureAudioOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        if assetWriterInputAudio.isReadyForMoreMediaData {
-            if assetWriterInputAudio.append(sampleBuffer) == false {
-                print("audio frame append failed")
-            }
-        } else {
-            //assertionFailure()
-        }
+  
     }
     
     private func captureAudioOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        print("audio frame dropped")
+
     }
     
     // MARK: - Capture Video Output
     
     private func captureVideoOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-        
-        let width = CVPixelBufferGetWidth(pixelBuffer)
-        let height = CVPixelBufferGetHeight(pixelBuffer)
-        
-        // Apply orientation
-        connection.videoOrientation = AVCaptureVideoOrientation.portrait
-        
-        // Draw overlay
-        
-        
-        
-        
-        if overlayImage != nil {
-            let overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
-            
-            imgContext.render(overlayCIImage,
-                              to: pixelBuffer,
-                              bounds: CGRect(x: 0, y: 0, width: 1080, height: 100),
-                              colorSpace: nil)
-        }
-        
-        // TODO:
-        //        if connection.videoOrientation != .portrait {
-        //
-        //        }
-        
-        // Display Pixel Buffer
-        let image = CIImage(cvPixelBuffer: pixelBuffer)
-        DispatchQueue.main.async {
-            self.displayImage?(image)
-        }
-        
-        // Append sample
-        // TODO: Move all assetWriter stuff outside, only assetWriterInputVideo must remain, also for audio
-        if assetWriter.status == .writing {
-            if sessionAtSourceTime == nil {
-                sessionAtSourceTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                assetWriter.startSession(atSourceTime: sessionAtSourceTime!)
-            }
-            
-            if assetWriterInputVideo.isReadyForMoreMediaData {
-                if assetWriter.status == .writing, assetWriterInputVideo.append(sampleBuffer) == false {
-                    if assetWriter.status == .failed {
-                        assertionFailure("AVAssetWriter error \(assetWriter.error!)")
-                    }
-                }
-            } else {
-                assertionFailure()
-            }
-        }
+
     }
     
     private func captureVideoOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        print("video frame dropped")
+
     }
 }
 

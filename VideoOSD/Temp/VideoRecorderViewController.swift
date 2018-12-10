@@ -7,81 +7,8 @@
 //
 
 import UIKit
-import GLKit
 
 class VideoRecorderViewController: UIViewController {
-    @IBOutlet weak var glImageView: GLKView!
-    @IBOutlet weak var recordingButton: UIButton!
-    
-    private var videoRecorder: VideoBufferRecorder = VideoBufferRecorder()
-    private var overlayView: OverlayView!
-    private var refreshTimer: CancelableTimer?
-    private var ciContext: CIContext!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Setup GLView
-        let glContext = EAGLContext(api: .openGLES2)
-        glImageView.context = glContext!
-        EAGLContext.setCurrent(glContext)
-        ciContext = CIContext(eaglContext: glImageView.context)
-        
-        // Recorder
-        videoRecorder.displayImage = { image in
-            self.glImageView.bindDrawable()
-            self.ciContext.draw(image, in: image.extent, from: image.extent)
-            self.glImageView.display()
-        }
-        
-        // Setup OverlayView
-        overlayView = OverlayView.createFromNib()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        
-        // Setup Recorder
-        // TODO: Combine createSession and startSession
-        let result = videoRecorder.createSession()
-        if case .initialized = result {
-            //OK
-        } else {
-            self.showError("videoRecorder not initialized")
-            return
-        }
-        
-        videoRecorder.startSession()
-        
-        
-        refreshTimer = CancelableTimer(timeInterval: 3, callback: { [unowned self] in
-            var overlayViewFrame = self.overlayView.frame
-            overlayViewFrame.size.width = self.videoRecorder.videoSize.width
-            self.overlayView.frame = overlayViewFrame
-            
-            self.overlayView.update("\(arc4random_uniform(55))", "\(arc4random_uniform(55))")
-            
-            self.videoRecorder.overlayImage = self.overlayView.image()
-        })
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
-        
-        refreshTimer = nil
-
-        videoRecorder.stopSession()
-    }
     
     // MARK: - Actions
     
@@ -116,13 +43,6 @@ class VideoRecorderViewController: UIViewController {
     
     // MARK: Orientation
     
-    override var shouldAutorotate: Bool {
-        get {
-            // Prevent autorotate when recording
-            return !videoRecorder.isRecording()
-        }
-    }
-    
 //    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 //        var videoOrientation = AVCaptureVideoOrientation.portrait
 //
@@ -154,51 +74,41 @@ class VideoRecorderViewController: UIViewController {
 ////        }
 //    }
     
-    // MARK: - Helpers
-    
-    private func showSaved() {
-        let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
-        let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(defaultAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    private func showError(_ error: String) {
-        let alertController = UIAlertController(title: "ERROR", message: error, preferredStyle: .alert)
-        let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(defaultAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-//    private func displayImage(from pixelBuffer: CVPixelBuffer) {
-//        let cameraImage: CIImage = CIImage(cvPixelBuffer: pixelBuffer)
-//        let image = UIImage(ciImage: cameraImage)
-//
-//        DispatchQueue.main.async {
-//            self.imageView.image = image
-//        }
-//    }
     
     
-//draw(overlayImage: overlayImage!.cgImage!, in: CGRect(x: 0, y: 500, width: overlayImage!.size.width, height: overlayImage!.size.height), to: pixelBuffer)
-//
-//    // CPU Drawing
-//    private func draw(overlayImage: CGImage, in rect: CGRect, to pixelBuffer: CVPixelBuffer) {
-//        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-//
-//        var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
-//        bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
-//
-//        let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer),
-//                                width: CVPixelBufferGetWidth(pixelBuffer),
-//                                height: CVPixelBufferGetHeight(pixelBuffer),
-//                                bitsPerComponent: 8,
-//                                bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
-//                                space: CGColorSpaceCreateDeviceRGB(),
-//                                bitmapInfo: bitmapInfo)
-//
-//        context!.draw(overlayImage, in: rect)
-//
-//        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-//    }
+    //    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    //        super.viewWillTransition(to: size, with: coordinator)
+    //
+    //        coordinator.animate(alongsideTransition: nil, completion: { [weak self] (context) in
+    //            DispatchQueue.main.async(execute: {
+    //                self?.updateVideoOrientation()
+    //            })
+    //        })
+    //    }
+    
+    //    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    //        super.viewWillTransition(to: size, with: coordinator)
+    //
+    //        coordinator.animate(
+    //            alongsideTransition: { (UIViewControllerTransitionCoordinatorContext) in
+    //                let deltaTransform = coordinator.targetTransform
+    //                let deltaAngle = atan2f(Float(deltaTransform.b), Float(deltaTransform.a))
+    //                var currentRotation : Float = (self.previewView!.layer.valueForKeyPath("transform.rotation.z")?.floatValue)!
+    //                // Adding a small value to the rotation angle forces the animation to occur in a the desired direction, preventing an issue where the view would appear to rotate 2PI radians during a rotation from LandscapeRight -> LandscapeLeft.
+    //                currentRotation += -1 * deltaAngle + 0.0001;
+    //                self.previewView!.layer.setValue(currentRotation, forKeyPath: "transform.rotation.z")
+    //                self.previewView!.layer.frame = self.view.bounds
+    //        },
+    //            completion:
+    //            { (UIViewControllerTransitionCoordinatorContext) in
+    //                // Integralize the transform to undo the extra 0.0001 added to the rotation angle.
+    //                var currentTransform : CGAffineTransform = self.previewView!.transform
+    //                currentTransform.a = round(currentTransform.a)
+    //                currentTransform.b = round(currentTransform.b)
+    //                currentTransform.c = round(currentTransform.c)
+    //                currentTransform.d = round(currentTransform.d)
+    //                self.previewView!.transform = currentTransform
+    //        })
+    //    }
+    
 }
