@@ -101,7 +101,6 @@
                         <outlet property="glImageView" destination="hnN-ar-yy8" id="JBt-cd-CFp"/>
                         <outlet property="recordingButton" destination="WLL-3M-ugy" id="Qi1-YG-O7S"/>
                         <outlet property="timeLabel" destination="7ee-1c-WrB" id="me9-Of-fRX"/>
-                        <segue destination="z7g-Tk-vdI" kind="show" id="9UC-XN-Kdr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bin-iN-edE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -111,7 +110,7 @@
         <!--Video Preview Video Controller-->
         <scene sceneID="R8C-L2-EBL">
             <objects>
-                <viewController id="z7g-Tk-vdI" customClass="VideoPreviewVideoController" customModule="VideoOSD" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VideoPreviewVideoController" id="z7g-Tk-vdI" customClass="VideoPreviewVideoController" customModule="VideoOSD" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="spt-AM-idy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import Photos
 
 class VideoPreviewVideoController: UIViewController {
     @IBOutlet private weak var videoPlayerView: VideoPlayerView!
     
     
-    
+    var asset: PHAsset?
 }

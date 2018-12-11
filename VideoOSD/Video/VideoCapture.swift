@@ -156,13 +156,19 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         captureSession.stopRunning()
     }
     
-    func startRecording() {
-        assetWriter.startWriting()
+    func startRecording(completion: @escaping (() -> Void), error: @escaping ((Error?) -> Void)) {
+        if assetWriter.startWriting() {
+            completion()
+        } else {
+            error(assetWriter.error)
+        }
     }
     
-    func stopRecording(finished: @escaping (() -> Void)) {
+    func stopRecording(completion: @escaping (() -> Void)) {
+        assetWriter.status.
+        
         assetWriter.finishWriting {
-            finished()
+            completion()
         }
     }
     

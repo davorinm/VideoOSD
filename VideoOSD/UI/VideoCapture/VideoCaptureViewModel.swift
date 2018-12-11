@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreLocation
+import Photos
 
 class VideoCaptureViewModel {
     var isCapturing: Bool {
@@ -24,7 +25,9 @@ class VideoCaptureViewModel {
     private var overlayView: OverlayView!
     
     var displayImage: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
-    var didStopCapturing: ((_ fileUrl: URL) -> Void)?
+    var didStartCapturing: (() -> Void)?
+    var didStopCapturing: (() -> Void)?
+    var continueNewPreviewVideo: (() -> Void)?
     
     // MARK: - Public
     
@@ -48,6 +51,12 @@ class VideoCaptureViewModel {
     func load() {
         filePath = createFilePath()
         
+        if checkIfExists() {
+            continueNewPreviewVideo?()
+            
+            return
+        }
+        
         let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
         videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec, fileUrl: filePath)
     }
@@ -64,16 +73,14 @@ class VideoCaptureViewModel {
     
     func startCapturing() {
         videoCapture.startRecording()
+        didStartCapturing?()
     }
     
-    func stopCapturing(completition: @escaping ((_ sucess: Bool, _ error: Error?) -> ())) {
+    func stopCapturing() {
         videoCapture.stopRecording { [unowned self] in
-            PhotoLibrary.moveToPhotos(url: self.filePath) { (saved, error) in
-                if saved {
-                    completition(true, nil)
-                } else {
-                    completition(false, error)
-                }
+            PhotoLibrary.moveToPhotos(url: self.filePath) { [unowned self] (saved, asset, error) in
+                self.removeFile()
+                self.didStopCapturing?()
             }
         }
     }
@@ -97,9 +104,16 @@ class VideoCaptureViewModel {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let fileUrl = paths[0].appendingPathComponent("output.mov")
         
-        // Remove old file
-        try? FileManager.default.removeItem(at: fileUrl)
-        
         return fileUrl
+    }
+    
+    private func checkIfExists() -> Bool {
+        // Check if file exists
+        return FileManager.default.fileExists(atPath: self.filePath)
+    }
+    
+    private func removeFile() {
+        // Remove filr at path
+        try? FileManager.default.removeItem(at: self.filePath)
     }
 }

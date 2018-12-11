@@ -32,23 +32,20 @@ class VideoCaptureViewController: UIViewController {
             self.glImageView.display()
         }
         
+        // Start recording
+        model.didStartCapturing = { [unowned self] in
+            self.recordingButton.setTitle("STP", for: .normal)
+            self.videoSaveSucess()
+        }
+        
         // Finish recording
-        model.didStopCapturing = { [unowned self] (fileUrl) in
-            // Move video
-            PhotoLibrary.moveToPhotos(url: fileUrl) { saved, error in
-                if let error = error {
-                    AlertHandler.showAlert(title: "ERROR",
-                                           message: error.localizedDescription,
-                                           okActionTitle: "OK",
-                                           fromViewController: self)
-                    return
-                }
-                
-                AlertHandler.showAlert(title: "SUCESS",
-                                       message: "Video saved to Photos",
-                                       okActionTitle: "OK",
-                                       fromViewController: self)
-            }
+        model.didStopCapturing = { [unowned self] in
+            self.recordingButton.setTitle("REC", for: .normal)
+            self.videoSaveSucess()
+        }
+        
+        model.continueNewPreviewVideo = { [unowned self] in
+            self.continueNewPreviewVideo()
         }
         
         model.load()
@@ -83,19 +80,47 @@ class VideoCaptureViewController: UIViewController {
     
     @IBAction func recordingButtonPressed(_ sender: Any) {
         if model.isCapturing {
-            model.stopCapturing { (sucess, error) in
-                if sucess {
-                    AlertHandler.showAlert(title: "Sucess", message: "Video saved", okActionTitle: "OK", fromViewController: self)
-                } else if let error = error {
-                    AlertHandler.showAlert(title: "ERROR", message: "\(error.localizedDescription)", okActionTitle: "OK", fromViewController: self)
-                } else {
-                    AlertHandler.showAlert(title: "ERROR", message: "VIDEO NOT SAVED", okActionTitle: "OK", fromViewController: self)
-                }
-            }
-            recordingButton.setTitle("REC", for: .normal)
+            model.stopCapturing()
         } else {
             model.startCapturing()
-            recordingButton.setTitle("STP", for: .normal)
         }
+    }
+    
+    // MARK: - Navigation
+    
+    private func continueNewPreviewVideo() {
+        let continueRecordingAction = UIAlertAction(title: "Continue recording", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
+            
+        })
+        
+        let newVideoAction = UIAlertAction(title: "Record a new video ", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
+            
+        })
+        
+        let previewAction = UIAlertAction(title: "Preview video", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
+            
+        })
+        
+        AlertHandler.showAlertWithActions(title: "WARNING",
+                                          message: "Previous video exists!",
+                                          fromViewController: self,
+                                          handlers: [continueRecordingAction, newVideoAction, previewAction])
+    }
+    
+    private func videoSaveSucess() {
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
+            let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "VideoPreviewVideoController") as! VideoPreviewVideoController
+            vc.asset = asset
+            self.present(vc, animated: true, completion: nil)
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.destructive, handler: { [unowned self] (alertAction) in
+            self.dismiss(animated: true, completion: nil)
+        })
+        
+        AlertHandler.showAlertWithActions(title: "SUCESS",
+                                          message: "Video saved to Photos\nWould you like to preview and edit it?",
+                                          fromViewController: self,
+                                          handlers: [okAction, cancelAction])
     }
 }
