@@ -164,11 +164,20 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         }
     }
     
-    func stopRecording(completion: @escaping (() -> Void)) {
-        assetWriter.status.
-        
-        assetWriter.finishWriting {
-            completion()
+    func stopRecording(completion: @escaping (() -> Void), error: @escaping ((Error?) -> Void)) {
+        assetWriter.finishWriting { [unowned self] in
+            switch self.assetWriter.status {
+            case .unknown:
+                assertionFailure("unknown?!?")
+            case .writing:
+                assertionFailure("writing?!?")
+            case .completed:
+                completion()
+            case .failed:
+                error(self.assetWriter.error)
+            case .cancelled:
+                assertionFailure("cancelled?!?")
+            }
         }
     }
     

@@ -1,6 +1,5 @@
 import UIKit
-//import AVFoundation
-//import Photos
+import Photos
 import GLKit
 
 class VideoCaptureViewController: UIViewController {
@@ -33,19 +32,29 @@ class VideoCaptureViewController: UIViewController {
         }
         
         // Start recording
-        model.didStartCapturing = { [unowned self] in
+        model.didStartCapturing = { [unowned self] (error) in
+            if let error = error {
+                assertionFailure("errorDidOccured")
+                return
+            }
+            
             self.recordingButton.setTitle("STP", for: .normal)
-            self.videoSaveSucess()
         }
         
         // Finish recording
-        model.didStopCapturing = { [unowned self] in
+        model.didEndCapturing = { [unowned self] (asset, error) in
+            if let error = error {
+                assertionFailure("errorDidOccured")
+                return
+            }
+            
             self.recordingButton.setTitle("REC", for: .normal)
-            self.videoSaveSucess()
+            self.videoSaveSucess(asset: asset)
         }
         
-        model.continueNewPreviewVideo = { [unowned self] in
-            self.continueNewPreviewVideo()
+        // Previous video exists
+        model.previousVideoExists = { [unowned self] in
+            self.previousVideoExists()
         }
         
         model.load()
@@ -73,28 +82,28 @@ class VideoCaptureViewController: UIViewController {
     // MARK: - Rotation
     
     override var shouldAutorotate: Bool {
-        return !model.isCapturing
+        return !model.isRecording
     }
     
     // MARK: - Actions
     
     @IBAction func recordingButtonPressed(_ sender: Any) {
-        if model.isCapturing {
-            model.stopCapturing()
+        if model.isRecording {
+            model.endRecording()
         } else {
-            model.startCapturing()
+            model.startRecording()
         }
     }
     
     // MARK: - Navigation
     
-    private func continueNewPreviewVideo() {
+    private func previousVideoExists() {
         let continueRecordingAction = UIAlertAction(title: "Continue recording", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
             
         })
         
         let newVideoAction = UIAlertAction(title: "Record a new video ", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
-            
+            self.model.startRecording()
         })
         
         let previewAction = UIAlertAction(title: "Preview video", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
@@ -107,20 +116,24 @@ class VideoCaptureViewController: UIViewController {
                                           handlers: [continueRecordingAction, newVideoAction, previewAction])
     }
     
-    private func videoSaveSucess() {
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
-            let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "VideoPreviewVideoController") as! VideoPreviewVideoController
-            vc.asset = asset
-            self.present(vc, animated: true, completion: nil)
-        })
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.destructive, handler: { [unowned self] (alertAction) in
-            self.dismiss(animated: true, completion: nil)
-        })
-        
-        AlertHandler.showAlertWithActions(title: "SUCESS",
-                                          message: "Video saved to Photos\nWould you like to preview and edit it?",
-                                          fromViewController: self,
-                                          handlers: [okAction, cancelAction])
+    private func videoSaveSucess(asset: PHAsset?) {
+        if let asset = asset {
+            let okAction = UIAlertAction(title: "Preview", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
+                let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "VideoPreviewVideoController") as! VideoPreviewVideoController
+                vc.asset = asset
+                self.present(vc, animated: true, completion: nil)
+            })
+            
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertAction.Style.destructive, handler: { [unowned self] (alertAction) in
+                self.dismiss(animated: true, completion: nil)
+            })
+            
+            AlertHandler.showAlertWithActions(title: "SUCESS",
+                                              message: "Video saved to Photos\nWould you like to preview and edit it?",
+                                              fromViewController: self,
+                                              handlers: [okAction, cancelAction])
+        } else {
+            AlertHandler.showAlert(title: "SUCESS", message: "Video saved to Photos", okActionTitle: "OK", fromViewController: self)
+        }
     }
 }

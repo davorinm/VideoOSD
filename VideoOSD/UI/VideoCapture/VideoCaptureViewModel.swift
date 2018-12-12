@@ -12,7 +12,7 @@ import CoreLocation
 import Photos
 
 class VideoCaptureViewModel {
-    var isCapturing: Bool {
+    var isRecording: Bool {
         get {
             return videoCapture.isRecording
         }
@@ -25,9 +25,9 @@ class VideoCaptureViewModel {
     private var overlayView: OverlayView!
     
     var displayImage: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
-    var didStartCapturing: (() -> Void)?
-    var didStopCapturing: (() -> Void)?
-    var continueNewPreviewVideo: (() -> Void)?
+    var didStartCapturing: ((_ error: Error?) -> Void)?
+    var didEndCapturing: ((_ asset: PHAsset?, _ error: Error?) -> Void)?
+    var previousVideoExists: (() -> Void)?
     
     // MARK: - Public
     
@@ -52,7 +52,7 @@ class VideoCaptureViewModel {
         filePath = createFilePath()
         
         if checkIfExists() {
-            continueNewPreviewVideo?()
+            previousVideoExists?()
             
             return
         }
@@ -71,17 +71,22 @@ class VideoCaptureViewModel {
         locationProvider.stopUpdatingLocation()
     }
     
-    func startCapturing() {
-        videoCapture.startRecording()
-        didStartCapturing?()
+    func startRecording() {
+        videoCapture.startRecording(completion: { [unowned self] in
+            self.didStartCapturing?(nil)
+        }) { (error) in
+            self.didStartCapturing?(error)
+        }
     }
     
-    func stopCapturing() {
-        videoCapture.stopRecording { [unowned self] in
+    func endRecording() {
+        videoCapture.stopRecording(completion: { [unowned self] in
             PhotoLibrary.moveToPhotos(url: self.filePath) { [unowned self] (saved, asset, error) in
                 self.removeFile()
-                self.didStopCapturing?()
+                self.didEndCapturing?(asset, nil)
             }
+        }) { (error) in
+            self.didEndCapturing?(nil, error)
         }
     }
     
@@ -109,7 +114,7 @@ class VideoCaptureViewModel {
     
     private func checkIfExists() -> Bool {
         // Check if file exists
-        return FileManager.default.fileExists(atPath: self.filePath)
+        return FileManager.default.fileExists(atPath: self.filePath.absoluteString)
     }
     
     private func removeFile() {
