@@ -11,6 +11,7 @@ import Photos
 
 class PhotoLibrary {
     class func moveToPhotos(url: URL, finished: @escaping ((_ saved: Bool, _ asset: PHAsset?, _ error: Error?) -> Void)) {
+        // TODO: Create album - https://stackoverflow.com/questions/27008641/save-images-with-phimagemanager-to-custom-album
         var assetPlaceholder: PHObjectPlaceholder?
         PHPhotoLibrary.shared().performChanges({
             let changeRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)

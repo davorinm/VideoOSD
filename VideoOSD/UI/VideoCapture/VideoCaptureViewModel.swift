@@ -49,16 +49,15 @@ class VideoCaptureViewModel {
     }
     
     func load() {
-        filePath = createFilePath()
+        createFilePath()
         
         if checkIfExists() {
             previousVideoExists?()
-            
-            return
+            removeFile()
         }
         
         let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
-        videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec, fileUrl: filePath)
+        videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec)
     }
     
     func start() {
@@ -72,7 +71,7 @@ class VideoCaptureViewModel {
     }
     
     func startRecording() {
-        videoCapture.startRecording(completion: { [unowned self] in
+        videoCapture.startRecording(fileUrl: filePath, completion: { [unowned self] in
             self.didStartCapturing?(nil)
         }) { (error) in
             self.didStartCapturing?(error)
@@ -82,8 +81,10 @@ class VideoCaptureViewModel {
     func endRecording() {
         videoCapture.stopRecording(completion: { [unowned self] in
             PhotoLibrary.moveToPhotos(url: self.filePath) { [unowned self] (saved, asset, error) in
-                self.removeFile()
-                self.didEndCapturing?(asset, nil)
+                DispatchQueue.main.async {
+                    self.removeFile()
+                    self.didEndCapturing?(asset, nil)
+                }
             }
         }) { (error) in
             self.didEndCapturing?(nil, error)
@@ -104,21 +105,21 @@ class VideoCaptureViewModel {
     
     // MARK: - Helpers
     
-    private func createFilePath() -> URL {
+    private func createFilePath() {
         // Path for output file
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let fileUrl = paths[0].appendingPathComponent("output.mov")
         
-        return fileUrl
+        self.filePath = fileUrl
     }
     
     private func checkIfExists() -> Bool {
         // Check if file exists
-        return FileManager.default.fileExists(atPath: self.filePath.absoluteString)
+        return FileManager.default.fileExists(atPath: self.filePath.path)
     }
     
     private func removeFile() {
-        // Remove filr at path
+        // Remove file at path
         try? FileManager.default.removeItem(at: self.filePath)
     }
 }

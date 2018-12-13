@@ -24,18 +24,20 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     private var assetWriterInputVideo: AVAssetWriterInput!
     private var assetWriterInputAudio: AVAssetWriterInput!
     
-    private var sessionAtSourceTime: CMTime?
+    private var startSessionTime: CMTime?
+    private var sessionTime: CMTime?
+    
     private var imgContext: CIContext!
     var overlayImage: UIImage?
     
     var isRecording: Bool {
         get {
-            return assetWriter.status == .writing
+            return assetWriter?.status == .writing
         }
     }
     var imageHandler: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
     
-    func setup(cameraType: CameraType, preferredSpec: VideoSpec?, fileUrl: URL) {
+    func setup(cameraType: CameraType, preferredSpec: VideoSpec?) {
         let captureSession = AVCaptureSession()
         
         videoDevice = cameraType.captureDevice()
@@ -81,7 +83,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         // setup video output
         do {
             let queue = DispatchQueue(label: "com.shu223.videosamplequeue")
-            let videoDataOutput = AVCaptureVideoDataOutput()
+            videoDataOutput = AVCaptureVideoDataOutput()
             videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_32BGRA)]
             videoDataOutput.alwaysDiscardsLateVideoFrames = true
             videoDataOutput.setSampleBufferDelegate(self, queue: queue)
@@ -94,13 +96,25 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         // setup audio output
         do {
             let queue = DispatchQueue(label: "com.shu223.audiosamplequeue")
-            let audioDataOutput = AVCaptureAudioDataOutput()
+            audioDataOutput = AVCaptureAudioDataOutput()
             audioDataOutput.setSampleBufferDelegate(self, queue: queue)
             guard captureSession.canAddOutput(audioDataOutput) else {
                 fatalError("Error adding audioDataOutput")
             }
             captureSession.addOutput(audioDataOutput)
         }
+        
+        // Set capture session
+        self.captureSession = captureSession
+        
+        // Create image context
+        self.imgContext = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
+    }
+    
+    private func createWriter(fileUrl: URL) {
+        // Clanup
+        startSessionTime = nil
+        sessionTime = nil
         
         // setup asset writer
         do {
@@ -120,12 +134,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         } catch let error {
             assertionFailure(error.localizedDescription)
         }
-        
-        // Set capture session
-        self.captureSession = captureSession
-        
-        // Create image context
-        self.imgContext = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
     }
     
     // MARK: - Controls
@@ -156,7 +164,9 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         captureSession.stopRunning()
     }
     
-    func startRecording(completion: @escaping (() -> Void), error: @escaping ((Error?) -> Void)) {
+    func startRecording(fileUrl: URL, completion: @escaping (() -> Void), error: @escaping ((Error?) -> Void)) {
+        createWriter(fileUrl: fileUrl)
+        
         if assetWriter.startWriting() {
             completion()
         } else {
@@ -165,6 +175,8 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     func stopRecording(completion: @escaping (() -> Void), error: @escaping ((Error?) -> Void)) {
+        assetWriter.endSession(atSourceTime: sessionTime!)
+        
         assetWriter.finishWriting { [unowned self] in
             switch self.assetWriter.status {
             case .unknown:
@@ -189,66 +201,72 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // Append sample
-        if assetWriter.status == .writing {
-            if sessionAtSourceTime == nil {
-                sessionAtSourceTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                assetWriter.startSession(atSourceTime: sessionAtSourceTime!)
+        if output == videoDataOutput {
+            // Apply orientation
+            if connection.videoOrientation != AVCaptureVideoOrientation.portrait {
+                connection.videoOrientation = AVCaptureVideoOrientation.portrait
             }
             
-            if output == videoDataOutput {
-                videoDataHandler(sampleBuffer: sampleBuffer, connection: connection)
-            } else if output == audioDataOutput {
-                audioDataHandler(sampleBuffer: sampleBuffer)
-            }
-        }
-    }
-    
-    // MARK: - AV Data handlers
-    
-    private func videoDataHandler(sampleBuffer: CMSampleBuffer, connection: AVCaptureConnection) {
-        // Apply orientation
-        if connection.videoOrientation != AVCaptureVideoOrientation.portrait {
-            connection.videoOrientation = AVCaptureVideoOrientation.portrait
-        }
-        
-        // Get PixelBuffer
-        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-        
-        // Draw overlay
-        if overlayImage != nil {
-            let overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
+            // Get PixelBuffer
+            let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
             
-            imgContext.render(overlayCIImage,
-                              to: pixelBuffer,
-                              bounds: CGRect(x: 0, y: 0, width: 1080, height: 100),
-                              colorSpace: nil)
-        }
-        
-        // Display Pixel Buffer
-        let image = CIImage(cvPixelBuffer: pixelBuffer)
-        let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-        let time: TimeInterval = CMTimeGetSeconds(timestamp)
-        
-        DispatchQueue.main.async {
-            self.imageHandler?(image, time)
-        }
-        
-        // Append video sample
-        if assetWriterInputVideo.isReadyForMoreMediaData {
-            if assetWriterInputVideo.append(sampleBuffer) == false {
-                if assetWriter.status == .failed {
-                    assertionFailure("AVAssetWriter error \(assetWriter.error!)")
+            // Draw overlay
+            if overlayImage != nil {
+                // Create CIImage
+                let overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
+                
+                // Render
+                imgContext.render(overlayCIImage,
+                                  to: pixelBuffer,
+                                  bounds: CGRect(x: 0, y: 0, width: 1080, height: 100),
+                                  colorSpace: nil)
+            }
+            
+            if assetWriter != nil, assetWriter.status == .writing {
+                // Session time
+                sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                
+                // Start session
+                if startSessionTime == nil {
+                    startSessionTime = sessionTime
+                    assetWriter.startSession(atSourceTime: startSessionTime!)
+                }
+                // Append video sample
+                if assetWriterInputVideo.isReadyForMoreMediaData {
+                    if assetWriterInputVideo.append(sampleBuffer) == false {
+                        if assetWriter.status == .failed {
+                            assertionFailure("AVAssetWriter error \(assetWriter.error!)")
+                        }
+                    }
+                    assetWriterInputVideo.markAsFinished()
                 }
             }
-        }
-    }
-    
-    private func audioDataHandler(sampleBuffer: CMSampleBuffer) {
-        // Append audio sample
-        if assetWriterInputAudio.isReadyForMoreMediaData {
-            if assetWriterInputAudio.append(sampleBuffer) == false {
-                if assetWriter.status == .failed {
-                    assertionFailure("AVAssetWriter error \(assetWriter.error!)")
+            
+            // Display Pixel Buffer
+            let image = CIImage(cvPixelBuffer: pixelBuffer)
+            let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+            let time: TimeInterval = CMTimeGetSeconds(timestamp)
+            DispatchQueue.main.async {
+                self.imageHandler?(image, time)
+            }
+        } else if output == audioDataOutput {
+            if assetWriter != nil, assetWriter.status == .writing {
+                // Session time
+                sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                
+                // Start session
+                if startSessionTime == nil {
+                    startSessionTime = sessionTime
+                    assetWriter.startSession(atSourceTime: startSessionTime!)
+                }
+                // Append audio sample
+                if assetWriterInputAudio.isReadyForMoreMediaData {
+                    if assetWriterInputAudio.append(sampleBuffer) == false {
+                        if assetWriter.status == .failed {
+                            assertionFailure("AVAssetWriter error \(assetWriter.error!)")
+                        }
+                    }
+                    assetWriterInputAudio.markAsFinished()
                 }
             }
         }

@@ -34,7 +34,7 @@ class VideoCaptureViewController: UIViewController {
         // Start recording
         model.didStartCapturing = { [unowned self] (error) in
             if let error = error {
-                assertionFailure("errorDidOccured")
+                assertionFailure("errorDidOccured \(error.localizedDescription)")
                 return
             }
             
@@ -44,7 +44,7 @@ class VideoCaptureViewController: UIViewController {
         // Finish recording
         model.didEndCapturing = { [unowned self] (asset, error) in
             if let error = error {
-                assertionFailure("errorDidOccured")
+                assertionFailure("errorDidOccured \(error.localizedDescription)")
                 return
             }
             
@@ -103,7 +103,7 @@ class VideoCaptureViewController: UIViewController {
         })
         
         let newVideoAction = UIAlertAction(title: "Record a new video ", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
-            self.model.startRecording()
+            
         })
         
         let previewAction = UIAlertAction(title: "Preview video", style: UIAlertAction.Style.default, handler: { [unowned self] (alertAction) in
