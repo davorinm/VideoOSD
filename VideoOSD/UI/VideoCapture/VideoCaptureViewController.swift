@@ -85,6 +85,12 @@ class VideoCaptureViewController: UIViewController {
         return !model.isRecording
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator	)
+        
+        model.changeOrientation(orientation: UIDevice.current.orientation)
+    }
+    
     // MARK: - Actions
     
     @IBAction func recordingButtonPressed(_ sender: Any) {
@@ -93,6 +99,21 @@ class VideoCaptureViewController: UIViewController {
         } else {
             model.startRecording()
         }
+    }
+    
+    @IBAction func switchCameraPressed(_ sender: Any) {
+//        if let sess = session {
+//            let currentCameraInput: AVCaptureInput = sess.inputs[0] as! AVCaptureInput
+//            sess.removeInput(currentCameraInput)
+//            var newCamera: AVCaptureDevice
+//            if (currentCameraInput as! AVCaptureDeviceInput).device.position == .Back {
+//                newCamera = self.cameraWithPosition(.Front)!
+//            } else {
+//                newCamera = self.cameraWithPosition(.Back)!
+//            }
+//            let newVideoInput = AVCaptureDeviceInput(device: newCamera, error: nil)
+//            session?.addInput(newVideoInput)
+//        }
     }
     
     // MARK: - Navigation

@@ -19,13 +19,12 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     private var videoDevice: AVCaptureDevice!
     private var videoDataOutput: AVCaptureVideoDataOutput!
     private var audioDataOutput: AVCaptureAudioDataOutput!
+    private var videoConnection: AVCaptureConnection!
     
     private var assetWriter: AVAssetWriter!
     private var assetWriterInputVideo: AVAssetWriterInput!
     private var assetWriterInputAudio: AVAssetWriterInput!
-    
     private var startSessionTime: CMTime?
-    private var sessionTime: CMTime?
     
     private var imgContext: CIContext!
     var overlayImage: UIImage?
@@ -91,6 +90,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 fatalError("Error adding videoDataOutput")
             }
             captureSession.addOutput(videoDataOutput)
+            videoConnection = videoDataOutput.connection(with: .video)
         }
         
         // setup audio output
@@ -114,7 +114,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     private func createWriter(fileUrl: URL) {
         // Clanup
         startSessionTime = nil
-        sessionTime = nil
         
         // setup asset writer
         do {
@@ -175,7 +174,8 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     func stopRecording(completion: @escaping (() -> Void), error: @escaping ((Error?) -> Void)) {
-        assetWriter.endSession(atSourceTime: sessionTime!)
+        assetWriterInputVideo.markAsFinished()
+        assetWriterInputAudio.markAsFinished()
         
         assetWriter.finishWriting { [unowned self] in
             switch self.assetWriter.status {
@@ -193,20 +193,32 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         }
     }
     
+    // MARK: - Video orientation
+    
+    func changeOrientation(orientation: UIDeviceOrientation) {
+        switch orientation {
+        case .landscapeLeft:
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeRight
+        case .landscapeRight:
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft
+        case .portraitUpsideDown:
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.portraitUpsideDown
+        default:
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
+        }
+    }
+    
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        print("\(self.classForCoder)/" + #function)
+        if assetWriter != nil, assetWriter.status == .writing {
+            print("didDrop sampleBuffer")
+        }
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // Append sample
         if output == videoDataOutput {
-            // Apply orientation
-            if connection.videoOrientation != AVCaptureVideoOrientation.portrait {
-                connection.videoOrientation = AVCaptureVideoOrientation.portrait
-            }
-            
             // Get PixelBuffer
             let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
             
@@ -218,14 +230,13 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 // Render
                 imgContext.render(overlayCIImage,
                                   to: pixelBuffer,
-                                  bounds: CGRect(x: 0, y: 0, width: 1080, height: 100),
+                                  bounds: CGRect(x: 0, y: 0, width: 1280, height: 720),
                                   colorSpace: nil)
             }
             
+            let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+            
             if assetWriter != nil, assetWriter.status == .writing {
-                // Session time
-                sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                
                 // Start session
                 if startSessionTime == nil {
                     startSessionTime = sessionTime
@@ -235,28 +246,26 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 if assetWriterInputVideo.isReadyForMoreMediaData {
                     if assetWriterInputVideo.append(sampleBuffer) == false {
                         if assetWriter.status == .failed {
-                            assertionFailure("AVAssetWriter error \(assetWriter.error!)")
+                            assertionFailure("AVAssetWriter error \(assetWriter.error!) \(assetWriter.status.rawValue)")
                         }
                     }
-                    assetWriterInputVideo.markAsFinished()
+                } else {
+                    print("NOT ReadyForMoreMediaData video")
                 }
             }
             
             // Display Pixel Buffer
             let image = CIImage(cvPixelBuffer: pixelBuffer)
-            let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+            let timestamp = sessionTime - (startSessionTime ?? sessionTime)
             let time: TimeInterval = CMTimeGetSeconds(timestamp)
             DispatchQueue.main.async {
                 self.imageHandler?(image, time)
             }
         } else if output == audioDataOutput {
             if assetWriter != nil, assetWriter.status == .writing {
-                // Session time
-                sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                
                 // Start session
                 if startSessionTime == nil {
-                    startSessionTime = sessionTime
+                    startSessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
                     assetWriter.startSession(atSourceTime: startSessionTime!)
                 }
                 // Append audio sample
@@ -266,7 +275,8 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                             assertionFailure("AVAssetWriter error \(assetWriter.error!)")
                         }
                     }
-                    assetWriterInputAudio.markAsFinished()
+                } else {
+                    print("NOT ReadyForMoreMediaData audio")
                 }
             }
         }

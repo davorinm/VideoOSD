@@ -91,6 +91,10 @@ class VideoCaptureViewModel {
         }
     }
     
+    func changeOrientation(orientation: UIDeviceOrientation) {
+        videoCapture.changeOrientation(orientation: orientation)
+    }
+    
     // MARK: - Location
     
     private func updateLocation(location: CLLocation) {
