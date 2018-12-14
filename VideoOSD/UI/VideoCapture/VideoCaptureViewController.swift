@@ -1,14 +1,11 @@
 import UIKit
 import Photos
-import GLKit
 
 class VideoCaptureViewController: UIViewController {
-    @IBOutlet private weak var glImageView: GLKView!
+    @IBOutlet private weak var glImageView: DrawableGLKView!
     @IBOutlet private weak var timeLabel: UILabel!
     @IBOutlet private weak var recordingButton: UIButton!
     
-    private var ciContext: CIContext!
-
     private let model: VideoCaptureViewModel = VideoCaptureViewModel()
     
     override func viewDidLoad() {
@@ -18,7 +15,7 @@ class VideoCaptureViewController: UIViewController {
         let glContext = EAGLContext(api: .openGLES2)
         glImageView.context = glContext!
         EAGLContext.setCurrent(glContext)
-        ciContext = CIContext(eaglContext: glImageView.context)
+        glImageView.ciContext = CIContext(eaglContext: glImageView.context)
         
         // Video data
         model.displayImage = { [unowned self] (image, timestamp) in
@@ -26,9 +23,7 @@ class VideoCaptureViewController: UIViewController {
             self.timeLabel.text = DateTimeFormatter.formatTime(time: timestamp)
             
             // Draw image
-            self.glImageView.bindDrawable()
-            self.ciContext.draw(image, in: image.extent, from: image.extent)
-            self.glImageView.display()
+            self.glImageView.drawImage(image)
         }
         
         // Start recording

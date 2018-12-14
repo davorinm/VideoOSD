@@ -62,8 +62,10 @@ extension AVCaptureDevice {
             format = formatWithHighestResolution(availableFormats)
         }
         
-        guard let selectedFormat = format else {return}
-        print("selected format: \(selectedFormat)")
+        guard let selectedFormat = format else {
+            return
+        }
+        
         do {
             try lockForConfiguration()
         } catch {
@@ -76,5 +78,10 @@ extension AVCaptureDevice {
             activeVideoMaxFrameDuration = CMTimeMake(value: 1, timescale: preferredFps)
             unlockForConfiguration()
         }
+    }
+    
+    func dimensions() -> CGSize {
+        let dimensions = CMVideoFormatDescriptionGetDimensions(activeFormat.formatDescription)
+        return CGSize(width: Int(dimensions.width), height: Int(dimensions.height))
     }
 }

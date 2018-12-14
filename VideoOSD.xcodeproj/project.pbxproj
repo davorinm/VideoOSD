@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1E01AE262183B51C007AF872 /* VideoOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E01AE252183B51C007AF872 /* VideoOptionsViewController.swift */; };
 		1E01AE282183B5AB007AF872 /* VideoPreviewVideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */; };
-		1E21CCEB213480DF00AB9685 /* UIImage+FromUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEA213480DF00AB9685 /* UIImage+FromUIView.swift */; };
 		1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */; };
 		1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF02134867900AB9685 /* OverlayView.swift */; };
 		1E21CCF4213487C200AB9685 /* UIView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF3213487C200AB9685 /* UIView+Image.swift */; };
@@ -40,6 +39,7 @@
 		721CBFF221BE6AA400C89C92 /* VideoOSDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFF121BE6AA400C89C92 /* VideoOSDTests.swift */; };
 		721CBFFA21BE6ABD00C89C92 /* DateTimeFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFF921BE6ABD00C89C92 /* DateTimeFormatterTests.swift */; };
 		721CBFFB21BE6AE400C89C92 /* DateTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFE921BE693A00C89C92 /* DateTimeFormatter.swift */; };
+		72FB275821C3BCEF009DEA23 /* DrawableGLKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB275721C3BCEF009DEA23 /* DrawableGLKView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +56,6 @@
 		1E01AE252183B51C007AF872 /* VideoOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOptionsViewController.swift; sourceTree = "<group>"; };
 		1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewVideoController.swift; sourceTree = "<group>"; };
 		1E21337F215D78FE0018036A /* VideoBufferRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBufferRecorder.swift; sourceTree = "<group>"; };
-		1E21CCEA213480DF00AB9685 /* UIImage+FromUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+FromUIView.swift"; sourceTree = "<group>"; };
 		1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableTimer.swift; sourceTree = "<group>"; };
 		1E21CCF02134867900AB9685 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		1E21CCF3213487C200AB9685 /* UIView+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Image.swift"; sourceTree = "<group>"; };
@@ -94,6 +93,7 @@
 		721CBFF321BE6AA400C89C92 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		721CBFF921BE6ABD00C89C92 /* DateTimeFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeFormatterTests.swift; sourceTree = "<group>"; };
 		721CBFFF21C24AB400C89C92 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		72FB275721C3BCEF009DEA23 /* DrawableGLKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableGLKView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,12 +142,12 @@
 				1EC6EF7221B07B04009EF247 /* Event */,
 				1E24CA902131405200943AC4 /* PhotoLibrary.swift */,
 				1E24CA932131423A00943AC4 /* Filters.swift */,
-				1E21CCEA213480DF00AB9685 /* UIImage+FromUIView.swift */,
 				1E21CCF3213487C200AB9685 /* UIView+Image.swift */,
 				1E21CCF52134931A00AB9685 /* UIView+Xib.swift */,
 				1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */,
 				1ED1B99921B1C73F0018396B /* AlertHandler.swift */,
 				721CBFE921BE693A00C89C92 /* DateTimeFormatter.swift */,
+				72FB275721C3BCEF009DEA23 /* DrawableGLKView.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -394,13 +394,13 @@
 				1EBC0CC121B5D0FF00C32420 /* AttributedSpeechViewController.swift in Sources */,
 				1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */,
 				1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */,
-				1E21CCEB213480DF00AB9685 /* UIImage+FromUIView.swift in Sources */,
 				1ED1B99A21B1C73F0018396B /* AlertHandler.swift in Sources */,
 				1E24CA942131423A00943AC4 /* Filters.swift in Sources */,
 				1E83D24A21AAE37900B4F7BC /* LocationProviderImpl.swift in Sources */,
 				1E53CC512128A937008F1B20 /* VideoCaptureViewController.swift in Sources */,
 				1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */,
 				1EC6EF7421B07B3B009EF247 /* ProviderError.swift in Sources */,
+				72FB275821C3BCEF009DEA23 /* DrawableGLKView.swift in Sources */,
 				1EEC48E221B71E6A00FE7B99 /* VideoOptionsViewModel.swift in Sources */,
 				1EBC0CC621B5D39F00C32420 /* VideoCapture.swift in Sources */,
 				1E01AE262183B51C007AF872 /* VideoOptionsViewController.swift in Sources */,

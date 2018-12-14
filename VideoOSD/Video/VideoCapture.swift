@@ -16,7 +16,7 @@ struct VideoSpec {
 
 class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     private var captureSession: AVCaptureSession?
-    private var videoDevice: AVCaptureDevice!
+    private var videoDevice: AVCaptureDevice?
     private var videoDataOutput: AVCaptureVideoDataOutput!
     private var audioDataOutput: AVCaptureAudioDataOutput!
     private var videoConnection: AVCaptureConnection!
@@ -34,6 +34,11 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             return assetWriter?.status == .writing
         }
     }
+    var videoDimensions: CGSize? {
+        get {
+            return videoDevice?.dimensions()
+        }
+    }
     var imageHandler: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
     
     func setup(cameraType: CameraType, preferredSpec: VideoSpec?) {
@@ -46,13 +51,17 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
             if let preferredSpec = preferredSpec {
                 // update the format with a preferred fps
-                videoDevice.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
+                videoDevice?.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
             }
         }
         
         // setup video device input
         do {
             do {
+                guard let videoDevice = videoDevice else {
+                    fatalError("Error adding videoDeviceInput")
+                }
+                
                 let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
                 guard captureSession.canAddInput(videoDeviceInput) else {
                     fatalError("Error adding videoDeviceInput")
@@ -108,7 +117,10 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         self.captureSession = captureSession
         
         // Create image context
-        self.imgContext = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
+        //self.imgContext = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
+        
+        let glContext = EAGLContext(api: .openGLES2)
+        self.imgContext = CIContext(eaglContext: glContext!)
     }
     
     private func createWriter(fileUrl: URL) {
@@ -227,11 +239,13 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 // Create CIImage
                 let overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
                 
+                let cSpace = CGColorSpaceCreateDeviceRGB()
+                
                 // Render
                 imgContext.render(overlayCIImage,
                                   to: pixelBuffer,
-                                  bounds: CGRect(x: 0, y: 0, width: 1280, height: 720),
-                                  colorSpace: nil)
+                                  bounds: CGRect(x: 0, y: 0, width: overlayImage!.size.width, height: overlayImage!.size.height),
+                                  colorSpace: cSpace)
             }
             
             let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)

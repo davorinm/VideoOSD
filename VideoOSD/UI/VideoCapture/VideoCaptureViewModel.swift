@@ -56,8 +56,21 @@ class VideoCaptureViewModel {
             removeFile()
         }
         
+        // Setup videoCapture
         let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
         videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec)
+        
+        // Initial orientation        
+        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
+        
+        // Set frame for view
+        if let size = videoCapture.videoDimensions {
+            var overlayViewFrame = self.overlayView.frame
+            overlayViewFrame.size = size
+            self.overlayView.frame = overlayViewFrame
+        } else {
+            assertionFailure("Size is a must!!")
+        }
     }
     
     func start() {
@@ -98,13 +111,10 @@ class VideoCaptureViewModel {
     // MARK: - Location
     
     private func updateLocation(location: CLLocation) {
-        var overlayViewFrame = self.overlayView.frame
-        overlayViewFrame.size = CGSize(width: 1280, height: 720)
-        self.overlayView.frame = overlayViewFrame
-        
         overlayView.update("\(location.speed)", "\(location.course)")
         
-        videoCapture.overlayImage = self.overlayView.image()
+        let img = self.overlayView.image()
+        videoCapture.overlayImage = img
     }
     
     // MARK: - Helpers
