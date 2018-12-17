@@ -26,7 +26,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     private var assetWriterInputAudio: AVAssetWriterInput!
     private var startSessionTime: CMTime?
     
-    private var imgContext: CIContext!
     var overlayImage: UIImage?
     
     var isRecording: Bool {
@@ -115,10 +114,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         
         // Set capture session
         self.captureSession = captureSession
-        
-        // Create image context
-        let glContext = EAGLContext(api: .openGLES2)
-        self.imgContext = CIContext(eaglContext: glContext!)
     }
     
     private func createWriter(fileUrl: URL) {
