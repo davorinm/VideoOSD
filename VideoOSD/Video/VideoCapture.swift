@@ -219,6 +219,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     // MARK: - Video orientation
     
     func changeOrientation(orientation: UIDeviceOrientation) {
+        // TODO: REMOVE, apply rotation on video
         guard videoConnection.isVideoOrientationSupported else {
             assertionFailure("VideoOrientation not Supported")
             return

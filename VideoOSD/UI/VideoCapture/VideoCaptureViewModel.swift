@@ -63,7 +63,8 @@ class VideoCaptureViewModel {
         }
         
         // Setup videoCapture
-        let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
+//        let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
+        let spec = VideoSpec(fps: nil, size: nil)
         videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec)
         
         // Initial orientation        
@@ -71,8 +72,11 @@ class VideoCaptureViewModel {
         
         // Set frame for overlay view
         if let size = videoCapture.videoDimensions {
+            let ratio = size.width / size.height
+            let cS = CGSize(width: 512, height: 512 / ratio)
+            
             var overlayViewFrame = self.overlayView.frame
-            overlayViewFrame.size = size
+            overlayViewFrame.size = cS
             self.overlayView.frame = overlayViewFrame
         } else {
             assertionFailure("Size is a must!!")
