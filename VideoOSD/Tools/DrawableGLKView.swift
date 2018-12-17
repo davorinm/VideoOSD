@@ -20,7 +20,7 @@ class DrawableGLKView: GLKView {
         // The image.extent() is the bounds of the image.
         self.bindDrawable()
         self.ciContext?.draw(image, in: drawingRect, from: image.extent)
-        self.display()
+        self.display()        
     }
 }
 

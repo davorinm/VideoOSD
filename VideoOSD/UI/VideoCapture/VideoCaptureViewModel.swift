@@ -63,7 +63,7 @@ class VideoCaptureViewModel {
         // Initial orientation        
         videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
         
-        // Set frame for view
+        // Set frame for overlay view
         if let size = videoCapture.videoDimensions {
             var overlayViewFrame = self.overlayView.frame
             overlayViewFrame.size = size
@@ -111,7 +111,7 @@ class VideoCaptureViewModel {
     // MARK: - Location
     
     private func updateLocation(location: CLLocation) {
-        overlayView.update("\(location.speed)", "\(location.course)")
+        overlayView.update("\(location.speed)", "\(location.course)")        
         
         let img = self.overlayView.image()
         videoCapture.overlayImage = img

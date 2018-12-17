@@ -117,8 +117,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         self.captureSession = captureSession
         
         // Create image context
-        //self.imgContext = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
-        
         let glContext = EAGLContext(api: .openGLES2)
         self.imgContext = CIContext(eaglContext: glContext!)
     }
@@ -239,13 +237,9 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 // Create CIImage
                 let overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
                 
-                let cSpace = CGColorSpaceCreateDeviceRGB()
-                
                 // Render
                 imgContext.render(overlayCIImage,
-                                  to: pixelBuffer,
-                                  bounds: CGRect(x: 0, y: 0, width: overlayImage!.size.width, height: overlayImage!.size.height),
-                                  colorSpace: cSpace)
+                                  to: pixelBuffer)
             }
             
             let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)

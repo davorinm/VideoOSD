@@ -29,5 +29,7 @@ class OverlayView: UIView {
     func update(_ firstData: String, _ secondData: String) {
         firstLabel.text = firstData
         secondLabel.text = secondData
+        
+        self.updateConstraints()
     }
 }
