@@ -17,6 +17,12 @@ class VideoCaptureViewModel {
             return videoCapture.isRecording
         }
     }
+    var isBackCamera: Bool? {
+        get {
+            return videoCapture.isBackCamera
+        }
+    }
+    
     private let locationProvider: LocationProvider = LocationProviderImpl()
     
     private var filePath: URL!
@@ -102,6 +108,14 @@ class VideoCaptureViewModel {
         }) { (error) in
             self.didEndCapturing?(nil, error)
         }
+    }
+    
+    func useFrontCamera() {
+        videoCapture.setup(cameraType: CameraType.front)
+    }
+    
+    func useBackCamera() {
+        videoCapture.setup(cameraType: CameraType.back)
     }
     
     func changeOrientation(orientation: UIDeviceOrientation) {

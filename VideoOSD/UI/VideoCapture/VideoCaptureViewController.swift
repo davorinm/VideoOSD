@@ -81,7 +81,9 @@ class VideoCaptureViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator	)
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        print("viewWillTransition size \(size)")
         
         model.changeOrientation(orientation: UIDevice.current.orientation)
     }
@@ -97,18 +99,15 @@ class VideoCaptureViewController: UIViewController {
     }
     
     @IBAction func switchCameraPressed(_ sender: Any) {
-//        if let sess = session {
-//            let currentCameraInput: AVCaptureInput = sess.inputs[0] as! AVCaptureInput
-//            sess.removeInput(currentCameraInput)
-//            var newCamera: AVCaptureDevice
-//            if (currentCameraInput as! AVCaptureDeviceInput).device.position == .Back {
-//                newCamera = self.cameraWithPosition(.Front)!
-//            } else {
-//                newCamera = self.cameraWithPosition(.Back)!
-//            }
-//            let newVideoInput = AVCaptureDeviceInput(device: newCamera, error: nil)
-//            session?.addInput(newVideoInput)
-//        }
+        if let isBackCamera = model.isBackCamera {
+            if isBackCamera {
+                model.useFrontCamera()
+            } else {
+                model.useBackCamera()
+            }
+        } else {
+            assertionFailure("Not initialized")
+        }
     }
     
     // MARK: - Navigation

@@ -15,8 +15,8 @@ struct VideoSpec {
 }
 
 class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    private var captureSession: AVCaptureSession?
-    private var videoDevice: AVCaptureDevice?
+    private var captureSession: AVCaptureSession = AVCaptureSession()
+    private var videoDevice: AVCaptureDevice!
     private var videoDataOutput: AVCaptureVideoDataOutput!
     private var audioDataOutput: AVCaptureAudioDataOutput!
     private var videoConnection: AVCaptureConnection!
@@ -35,14 +35,29 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     var videoDimensions: CGSize? {
         get {
-            return videoDevice?.dimensions()
+            if let videoDevice = videoDevice {
+                return videoDevice.dimensions()
+            } else {
+                return nil
+            }
+        }
+    }
+    var isBackCamera: Bool? {
+        get {
+            switch videoDevice.position {
+            case .unspecified:
+                return nil
+            case .back:
+                return false
+            case .front:
+                return true
+            }
         }
     }
     var imageHandler: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
     
     func setup(cameraType: CameraType, preferredSpec: VideoSpec?) {
-        let captureSession = AVCaptureSession()
-        
+        // Input device
         videoDevice = cameraType.captureDevice()
         
         // setup video format
@@ -111,9 +126,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             }
             captureSession.addOutput(audioDataOutput)
         }
-        
-        // Set capture session
-        self.captureSession = captureSession
     }
     
     private func createWriter(fileUrl: URL) {
@@ -143,11 +155,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     // MARK: - Controls
     
     func startSession() {
-        guard let captureSession = self.captureSession else {
-            assertionFailure("Run setup")
-            return
-        }
-        
         if captureSession.isRunning {
             assertionFailure("Already running")
         }
@@ -156,11 +163,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     func stopSession() {
-        guard let captureSession = self.captureSession else {
-            assertionFailure("Run setup")
-            return
-        }
-        
         if !captureSession.isRunning {
             assertionFailure("Already stopped")
         }
