@@ -234,12 +234,24 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             
             // Draw overlay
             if overlayImage != nil {
-                // Create CIImage
-                let overlayCIImage = CIImage(cgImage: overlayImage!.cgImage!)
-                
-                // Render
-                imgContext.render(overlayCIImage,
-                                  to: pixelBuffer)
+                func write(image overlayImage: UIImage, toBuffer pixelBuffer: CVPixelBuffer) {
+                    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+                    var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
+                    bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
+
+                    let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer),
+                                            width: CVPixelBufferGetWidth(pixelBuffer),
+                                            height: CVPixelBufferGetHeight(pixelBuffer),
+                                            bitsPerComponent: 8,
+                                            bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
+                                            space: CGColorSpaceCreateDeviceRGB(),
+                                            bitmapInfo: bitmapInfo)
+                    
+                    context!.draw(overlayImage.cgImage!, in: CGRect(x: 0.0, y: 0.0, width: overlayImage.size.width, height: overlayImage.size.height))
+                    CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+                }
+
+                write(image: overlayImage!, toBuffer: pixelBuffer)
             }
             
             let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
