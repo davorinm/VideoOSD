@@ -11,7 +11,6 @@
 		1E01AE282183B5AB007AF872 /* VideoPreviewVideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */; };
 		1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */; };
 		1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF02134867900AB9685 /* OverlayView.swift */; };
-		1E21CCF4213487C200AB9685 /* UIView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF3213487C200AB9685 /* UIView+Image.swift */; };
 		1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF52134931A00AB9685 /* UIView+Xib.swift */; };
 		1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA902131405200943AC4 /* PhotoLibrary.swift */; };
 		1E24CA942131423A00943AC4 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA932131423A00943AC4 /* Filters.swift */; };
@@ -58,7 +57,6 @@
 		1E21337F215D78FE0018036A /* VideoBufferRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBufferRecorder.swift; sourceTree = "<group>"; };
 		1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableTimer.swift; sourceTree = "<group>"; };
 		1E21CCF02134867900AB9685 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
-		1E21CCF3213487C200AB9685 /* UIView+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Image.swift"; sourceTree = "<group>"; };
 		1E21CCF52134931A00AB9685 /* UIView+Xib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Xib.swift"; sourceTree = "<group>"; };
 		1E24CA902131405200943AC4 /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
 		1E24CA932131423A00943AC4 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
@@ -142,7 +140,6 @@
 				1EC6EF7221B07B04009EF247 /* Event */,
 				1E24CA902131405200943AC4 /* PhotoLibrary.swift */,
 				1E24CA932131423A00943AC4 /* Filters.swift */,
-				1E21CCF3213487C200AB9685 /* UIView+Image.swift */,
 				1E21CCF52134931A00AB9685 /* UIView+Xib.swift */,
 				1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */,
 				1ED1B99921B1C73F0018396B /* AlertHandler.swift */,
@@ -384,7 +381,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E21CCF4213487C200AB9685 /* UIView+Image.swift in Sources */,
 				1E73123321B44074008DC499 /* VideoCaptureViewModel.swift in Sources */,
 				1E01AE282183B5AB007AF872 /* VideoPreviewVideoController.swift in Sources */,
 				1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */,

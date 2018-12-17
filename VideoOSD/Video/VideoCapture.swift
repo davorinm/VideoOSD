@@ -280,16 +280,22 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
                     var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
                     bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
-
+                    
+                    let width = CVPixelBufferGetWidth(pixelBuffer)
+                    let height = CVPixelBufferGetHeight(pixelBuffer)
+                    
                     let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer),
-                                            width: CVPixelBufferGetWidth(pixelBuffer),
-                                            height: CVPixelBufferGetHeight(pixelBuffer),
+                                            width: width,
+                                            height: height,
                                             bitsPerComponent: 8,
                                             bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
                                             space: CGColorSpaceCreateDeviceRGB(),
                                             bitmapInfo: bitmapInfo)
                     
-                    context!.draw(overlayImage.cgImage!, in: CGRect(x: 0.0, y: 0.0, width: overlayImage.size.width, height: overlayImage.size.height))
+                    context!.draw(overlayImage.cgImage!, in: CGRect(x: 0,
+                                                                    y: 0,
+                                                                    width: width,
+                                                                    height: height))
                     CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
                 }
 

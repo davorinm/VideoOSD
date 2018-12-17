@@ -11,12 +11,6 @@ class VideoCaptureViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Setup GLView
-        let glContext = EAGLContext(api: .openGLES2)
-        glImageView.context = glContext!
-        EAGLContext.setCurrent(glContext)
-        glImageView.ciContext = CIContext(eaglContext: glImageView.context)
-        
         // Video data
         model.displayImage = { [unowned self] (image, timestamp) in
             // Time

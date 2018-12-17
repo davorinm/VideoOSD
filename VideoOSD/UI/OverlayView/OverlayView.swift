@@ -12,6 +12,8 @@ class OverlayView: UIView {
     @IBOutlet private weak var firstLabel: UILabel!
     @IBOutlet private weak var secondLabel: UILabel!
     
+    private var renderer: UIGraphicsImageRenderer!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -19,6 +21,9 @@ class OverlayView: UIView {
     }
     
     private func setup() {
+        
+        renderer = UIGraphicsImageRenderer(bounds: bounds)
+        
         // First
         firstLabel.text = "1"
         
@@ -31,5 +36,11 @@ class OverlayView: UIView {
         secondLabel.text = secondData
         
         layoutIfNeeded()        
+    }
+    
+    func image() -> UIImage? {
+        return renderer.image { rendererContext in
+            layer.render(in: rendererContext.cgContext)
+        }
     }
 }
