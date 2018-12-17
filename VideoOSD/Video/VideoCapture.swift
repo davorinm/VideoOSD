@@ -269,6 +269,11 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
             
             // Draw overlay
+            // TODO: Create CVPixelBuffer from overlayImage, merge overlayImagePixelBuffer in video pixel buffer to remove CGContext
+            // Maybe use CVPixelBufferPool
+            // CISourceOverCompositing https://stackoverflow.com/questions/48969223/core-image-filter-cisourceovercompositing-not-appearing-as-expected-with-alpha-o
+            // https://stackoverflow.com/a/4057608
+            
             if overlayImage != nil {
                 func write(image overlayImage: UIImage, toBuffer pixelBuffer: CVPixelBuffer) {
                     CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
