@@ -273,6 +273,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             // Maybe use CVPixelBufferPool
             // CISourceOverCompositing https://stackoverflow.com/questions/48969223/core-image-filter-cisourceovercompositing-not-appearing-as-expected-with-alpha-o
             // https://stackoverflow.com/a/4057608
+            // https://stackoverflow.com/questions/21753926/avfoundation-add-text-to-the-cmsamplebufferref-video-frame/21754725
             
             if overlayImage != nil {
                 func write(image overlayImage: UIImage, toBuffer pixelBuffer: CVPixelBuffer) {
