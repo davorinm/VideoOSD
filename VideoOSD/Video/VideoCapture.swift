@@ -107,8 +107,16 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         // Set capture session
         self.captureSession = captureSession
         
-        // Create image context
-        self.imgContext = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
+        // Create image conte
+//        let glContext = EAGLContext(api: .openGLES2)
+        
+//        CIContext(options: nil)
+        
+        
+        self.imgContext = CIContext(options: [CIContextOption.workingColorSpace : NSNull()])
+        
+//        self.imgContext = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!)
+//        imgContext.
     }
     
     private func createWriter(fileUrl: URL) {
@@ -229,9 +237,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 
                 // Render
                 imgContext.render(overlayCIImage,
-                                  to: pixelBuffer,
-                                  bounds: CGRect(x: 0, y: 0, width: 1280, height: 720),
-                                  colorSpace: nil)
+                                  to: pixelBuffer)
             }
             
             let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)

@@ -58,6 +58,8 @@ class VideoCaptureViewModel {
         
         let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
         videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec)
+        
+        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
     }
     
     func start() {
@@ -103,6 +105,8 @@ class VideoCaptureViewModel {
         self.overlayView.frame = overlayViewFrame
         
         overlayView.update("\(location.speed)", "\(location.course)")
+        overlayView.updateConstraints()
+        
         
         videoCapture.overlayImage = self.overlayView.image()
     }

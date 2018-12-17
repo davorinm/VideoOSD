@@ -25,9 +25,13 @@ class VideoCaptureViewController: UIViewController {
             // Time
             self.timeLabel.text = DateTimeFormatter.formatTime(time: timestamp)
             
+            //
+            let scale = CGAffineTransform(scaleX: self.glImageView.contentScaleFactor, y: self.glImageView.contentScaleFactor)
+            let drawingRect = self.glImageView.frame.applying(scale)
+            
             // Draw image
             self.glImageView.bindDrawable()
-            self.ciContext.draw(image, in: image.extent, from: image.extent)
+            self.ciContext.draw(image, in: drawingRect, from: image.extent)
             self.glImageView.display()
         }
         
