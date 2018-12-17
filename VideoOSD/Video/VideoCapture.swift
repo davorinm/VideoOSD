@@ -26,7 +26,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     private var assetWriterInputAudio: AVAssetWriterInput!
     private var startSessionTime: CMTime?
     
-    var overlayImage: UIImage?
+    var overlayBuffer: CVPixelBuffer?
     
     var isRecording: Bool {
         get {
@@ -216,6 +216,35 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         }
     }
     
+    func setOverlayImage(overlayImage: UIImage) {
+        self.overlayBuffer = self.buffer(from: overlayImage)
+    }
+    
+    private func buffer(from image: UIImage) -> CVPixelBuffer? {
+        let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
+        var pixelBuffer : CVPixelBuffer?
+        let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(image.size.width), Int(image.size.height), kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
+        guard (status == kCVReturnSuccess) else {
+            return nil
+        }
+        
+        CVPixelBufferLockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer!)
+        
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+        let context = CGContext(data: pixelData, width: Int(image.size.width), height: Int(image.size.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
+        
+        context?.translateBy(x: 0, y: image.size.height)
+        context?.scaleBy(x: 1.0, y: -1.0)
+        
+        UIGraphicsPushContext(context!)
+        image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
+        UIGraphicsPopContext()
+        CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        
+        return pixelBuffer
+    }
+    
     // MARK: - Video orientation
     
     func changeOrientation(orientation: UIDeviceOrientation) {
@@ -275,25 +304,30 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             // https://stackoverflow.com/a/4057608
             // https://stackoverflow.com/questions/21753926/avfoundation-add-text-to-the-cmsamplebufferref-video-frame/21754725
             
-            if overlayImage != nil {
-                func write(image overlayImage: UIImage, toBuffer pixelBuffer: CVPixelBuffer) {
-                    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-                    var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
-                    bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
-
-                    let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer),
-                                            width: CVPixelBufferGetWidth(pixelBuffer),
-                                            height: CVPixelBufferGetHeight(pixelBuffer),
-                                            bitsPerComponent: 8,
-                                            bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
-                                            space: CGColorSpaceCreateDeviceRGB(),
-                                            bitmapInfo: bitmapInfo)
-                    
-                    context!.draw(overlayImage.cgImage!, in: CGRect(x: 0.0, y: 0.0, width: overlayImage.size.width, height: overlayImage.size.height))
-                    CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-                }
-
-                write(image: overlayImage!, toBuffer: pixelBuffer)
+            if overlayBuffer != nil {
+                
+                let ttt = CIContext(options: nil)
+                ttt.render(<#T##image: CIImage##CIImage#>, toBitmap: <#T##UnsafeMutableRawPointer#>, rowBytes: <#T##Int#>, bounds: <#T##CGRect#>, format: <#T##CIFormat#>, colorSpace: <#T##CGColorSpace?#>)
+                
+                
+//                func write(image overlayImage: UIImage, toBuffer pixelBuffer: CVPixelBuffer) {
+//                    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+//                    var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
+//                    bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
+//
+//                    let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer),
+//                                            width: CVPixelBufferGetWidth(pixelBuffer),
+//                                            height: CVPixelBufferGetHeight(pixelBuffer),
+//                                            bitsPerComponent: 8,
+//                                            bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
+//                                            space: CGColorSpaceCreateDeviceRGB(),
+//                                            bitmapInfo: bitmapInfo)
+//
+//                    context!.draw(overlayImage.cgImage!, in: CGRect(x: 0.0, y: 0.0, width: overlayImage.size.width, height: overlayImage.size.height))
+//                    CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+//                }
+//
+//                write(image: overlayImage!, toBuffer: pixelBuffer)
             }
             
             let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
