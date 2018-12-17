@@ -30,6 +30,6 @@ class OverlayView: UIView {
         firstLabel.text = firstData
         secondLabel.text = secondData
         
-        self.updateConstraints()
+        layoutIfNeeded()        
     }
 }
