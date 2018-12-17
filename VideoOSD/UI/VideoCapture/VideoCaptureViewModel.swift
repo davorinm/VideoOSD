@@ -111,11 +111,17 @@ class VideoCaptureViewModel {
     }
     
     func useFrontCamera() {
-        videoCapture.setup(cameraType: CameraType.front)
+        videoCapture.setupVideoDeviceInput(cameraType: CameraType.front, preferredSpec: nil)
+        
+        // Initial orientation
+        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
     }
     
     func useBackCamera() {
-        videoCapture.setup(cameraType: CameraType.back)
+        videoCapture.setupVideoDeviceInput(cameraType: CameraType.back, preferredSpec: nil)
+        
+        // Initial orientation
+        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
     }
     
     func changeOrientation(orientation: UIDeviceOrientation) {

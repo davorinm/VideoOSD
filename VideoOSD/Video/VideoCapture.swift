@@ -15,7 +15,7 @@ struct VideoSpec {
 }
 
 class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    private var captureSession: AVCaptureSession = AVCaptureSession()
+    private var captureSession: AVCaptureSession!
     private var videoDevice: AVCaptureDevice!
     private var videoDataOutput: AVCaptureVideoDataOutput!
     private var audioDataOutput: AVCaptureAudioDataOutput!
@@ -48,43 +48,20 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             case .unspecified:
                 return nil
             case .back:
-                return false
-            case .front:
                 return true
+            case .front:
+                return false
             }
         }
     }
     var imageHandler: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
     
     func setup(cameraType: CameraType, preferredSpec: VideoSpec?) {
-        // Input device
-        videoDevice = cameraType.captureDevice()
-        
-        // setup video format
-        do {
-            captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
-            if let preferredSpec = preferredSpec {
-                // update the format with a preferred fps
-                videoDevice?.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
-            }
-        }
+        // initialize session
+        captureSession = AVCaptureSession()
         
         // setup video device input
-        do {
-            do {
-                guard let videoDevice = videoDevice else {
-                    fatalError("Error adding videoDeviceInput")
-                }
-                
-                let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
-                guard captureSession.canAddInput(videoDeviceInput) else {
-                    fatalError("Error adding videoDeviceInput")
-                }
-                captureSession.addInput(videoDeviceInput)
-            } catch let error {
-                fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
-            }
-        }
+        setupVideoDeviceInput(cameraType: cameraType, preferredSpec: preferredSpec)
         
         // setup audio device input
         do {
@@ -125,6 +102,45 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 fatalError("Error adding audioDataOutput")
             }
             captureSession.addOutput(audioDataOutput)
+        }
+    }
+    
+    func setupVideoDeviceInput(cameraType: CameraType, preferredSpec: VideoSpec?) {
+        if captureSession == nil {
+            assertionFailure("Call setup first")
+        }
+        
+        // Input device
+        videoDevice = cameraType.captureDevice()
+        
+        // setup video format
+        do {
+            captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
+            if let preferredSpec = preferredSpec {
+                // update the format with a preferred fps
+                videoDevice.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
+            }
+        }
+        
+        // setup video device input
+        do {
+            do {
+                guard let videoDevice = videoDevice else {
+                    fatalError("Error adding videoDeviceInput")
+                }
+                
+                // Remove inputs
+                captureSession.inputs.forEach({ captureSession.removeInput($0) })
+                
+                // Add input
+                let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
+                guard captureSession.canAddInput(videoDeviceInput) else {
+                    fatalError("Error adding videoDeviceInput")
+                }
+                captureSession.addInput(videoDeviceInput)
+            } catch let error {
+                fatalError("Could not create AVCaptureDeviceInput instance with error: \(error).")
+            }
         }
     }
     
@@ -203,15 +219,38 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     // MARK: - Video orientation
     
     func changeOrientation(orientation: UIDeviceOrientation) {
-        switch orientation {
-        case .landscapeLeft:
-            videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeRight
-        case .landscapeRight:
-            videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft
-        case .portraitUpsideDown:
-            videoConnection.videoOrientation = AVCaptureVideoOrientation.portraitUpsideDown
-        default:
-            videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
+        guard videoConnection.isVideoOrientationSupported else {
+            assertionFailure("VideoOrientation not Supported")
+            return
+        }
+        
+        guard let isBackCamera = isBackCamera else {
+            assertionFailure("Camera missing")
+            return
+        }
+        
+        if isBackCamera {
+            switch orientation {
+            case .landscapeLeft:
+                videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeRight
+            case .landscapeRight:
+                videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft
+            case .portraitUpsideDown:
+                videoConnection.videoOrientation = AVCaptureVideoOrientation.portraitUpsideDown
+            default:
+                videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
+            }
+        } else {
+            switch orientation {
+            case .landscapeLeft:
+                videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft
+            case .landscapeRight:
+                videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeRight
+            case .portraitUpsideDown:
+                videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
+            default:
+                videoConnection.videoOrientation = AVCaptureVideoOrientation.portraitUpsideDown
+            }
         }
     }
     
