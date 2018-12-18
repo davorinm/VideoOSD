@@ -5,6 +5,8 @@ class VideoCaptureViewController: UIViewController {
     @IBOutlet private weak var glImageView: DrawableGLKView!
     @IBOutlet private weak var timeLabel: UILabel!
     @IBOutlet private weak var recordingButton: UIButton!
+    @IBOutlet private weak var optionsButton: UIButton!
+    @IBOutlet private weak var frontBackCameraButton: UIButton!
     
     private let model: VideoCaptureViewModel = VideoCaptureViewModel()
     
@@ -52,6 +54,11 @@ class VideoCaptureViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(deviceOrientationDidChange),
+                                               name: UIDevice.orientationDidChangeNotification,
+                                               object: nil)
+        
         navigationController?.setNavigationBarHidden(true, animated: animated)
         model.start()
     }
@@ -59,6 +66,7 @@ class VideoCaptureViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        NotificationCenter.default.removeObserver(self)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
@@ -71,15 +79,31 @@ class VideoCaptureViewController: UIViewController {
     // MARK: - Rotation
     
     override var shouldAutorotate: Bool {
-        return !model.isRecording
+        return false
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+    @objc func deviceOrientationDidChange(_ notification: Notification) {
+        let deviceOrientation = UIDevice.current.orientation
         
-        print("viewWillTransition size \(size)")
+        let angle: Double
+        switch deviceOrientation {
+        case .portraitUpsideDown:
+            angle = .pi
+        case .landscapeLeft:
+            angle = .pi / 2
+        case .landscapeRight:
+            angle = -.pi / 2
+        default:
+            angle = 0
+        }
         
-        model.changeOrientation(orientation: UIDevice.current.orientation)
+        UIView.animate(withDuration: 0.3) {
+            self.recordingButton.transform = CGAffineTransform(rotationAngle: CGFloat(angle))
+            self.optionsButton.transform = CGAffineTransform(rotationAngle: CGFloat(angle))
+            self.frontBackCameraButton.transform = CGAffineTransform(rotationAngle: CGFloat(angle))
+        }
+        
+        model.changeOrientation(orientation: deviceOrientation)
     }
     
     // MARK: - Actions

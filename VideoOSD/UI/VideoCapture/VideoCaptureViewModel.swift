@@ -72,6 +72,8 @@ class VideoCaptureViewModel {
         
         // Set frame for overlay view
         if let size = videoCapture.videoDimensions {
+            print("videoDimensions \(size)")
+            
             let ratio = size.width / size.height
             let cS = CGSize(width: 512, height: 512 / ratio)
             

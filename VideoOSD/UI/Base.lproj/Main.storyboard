@@ -109,7 +109,9 @@
                     <navigationItem key="navigationItem" id="37G-SS-o5d"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="frontBackCameraButton" destination="ICi-f8-aWI" id="2DV-Fk-vmE"/>
                         <outlet property="glImageView" destination="hnN-ar-yy8" id="JBt-cd-CFp"/>
+                        <outlet property="optionsButton" destination="VNx-M2-aLg" id="Ope-QZ-nUT"/>
                         <outlet property="recordingButton" destination="WLL-3M-ugy" id="Qi1-YG-O7S"/>
                         <outlet property="timeLabel" destination="7ee-1c-WrB" id="me9-Of-fRX"/>
                     </connections>

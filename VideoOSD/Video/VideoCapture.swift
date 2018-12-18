@@ -115,10 +115,11 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         
         // setup video format
         do {
-            captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
             if let preferredSpec = preferredSpec {
-                // update the format with a preferred fps
+                captureSession.sessionPreset = AVCaptureSession.Preset.inputPriority
                 videoDevice.updateFormatWithPreferredVideoSpec(preferredSpec: preferredSpec)
+            } else {
+                captureSession.sessionPreset = AVCaptureSession.Preset.hd1920x1080
             }
         }
         
@@ -277,29 +278,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             // https://stackoverflow.com/questions/21753926/avfoundation-add-text-to-the-cmsamplebufferref-video-frame/21754725
             
             if overlayImage != nil {
-                func write(image overlayImage: UIImage, toBuffer pixelBuffer: CVPixelBuffer) {
-                    CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-                    var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
-                    bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
-                    
-                    let width = CVPixelBufferGetWidth(pixelBuffer)
-                    let height = CVPixelBufferGetHeight(pixelBuffer)
-                    
-                    let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer),
-                                            width: width,
-                                            height: height,
-                                            bitsPerComponent: 8,
-                                            bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
-                                            space: CGColorSpaceCreateDeviceRGB(),
-                                            bitmapInfo: bitmapInfo)
-                    
-                    context!.draw(overlayImage.cgImage!, in: CGRect(x: 0,
-                                                                    y: 0,
-                                                                    width: width,
-                                                                    height: height))
-                    CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-                }
-
                 write(image: overlayImage!, toBuffer: pixelBuffer)
             }
             
@@ -349,5 +327,27 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 }
             }
         }
+    }
+    
+    private func write(image overlayImage: UIImage, toBuffer pixelBuffer: CVPixelBuffer) {
+        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+        
+        var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
+        bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
+        
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        
+        let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer),
+                                width: width,
+                                height: height,
+                                bitsPerComponent: 8,
+                                bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
+                                space: CGColorSpaceCreateDeviceRGB(),
+                                bitmapInfo: bitmapInfo)
+        
+        context!.draw(overlayImage.cgImage!, in: CGRect(x: 0, y: 0, width: width, height: height))
+        
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
     }
 }
