@@ -303,8 +303,20 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             // CISourceOverCompositing https://stackoverflow.com/questions/48969223/core-image-filter-cisourceovercompositing-not-appearing-as-expected-with-alpha-o
             // https://stackoverflow.com/a/4057608
             // https://stackoverflow.com/questions/21753926/avfoundation-add-text-to-the-cmsamplebufferref-video-frame/21754725
+            // https://stackoverflow.com/questions/46524830/how-do-i-draw-onto-a-cvpixelbufferref-that-is-planar-ycbcr-420f-yuv-nv12-not-rgb/46524831#46524831
+            // https://stackoverflow.com/questions/30609241/render-dynamic-text-onto-cvpixelbufferref-while-recording-video
+            
+            //!!!! https://www.objc.io/issues/23-video/core-image-video/
+            // https://gist.github.com/bgayman/6b27428ea48750e8306975c735bd517e
+            // https://stackoverflow.com/questions/35603608/ios-overlay-two-images-with-alpha-offscreen
             
             if overlayBuffer != nil {
+                
+                CVPixelBufferLockBaseAddress( backImageBuffer,  kCVPixelBufferLock_ReadOnly );
+                backImageFromSample = [CIImage imageWithCVPixelBuffer:backImageBuffer];
+                [coreImageContext render:backImageFromSample toCVPixelBuffer:nextImageBuffer bounds:toRect colorSpace:rgbSpace];
+                CVPixelBufferUnlockBaseAddress( backImageBuffer,  kCVPixelBufferLock_ReadOnly );
+            
                 
                 let ttt = CIContext(options: nil)
                 ttt.render(<#T##image: CIImage##CIImage#>, toBitmap: <#T##UnsafeMutableRawPointer#>, rowBytes: <#T##Int#>, bounds: <#T##CGRect#>, format: <#T##CIFormat#>, colorSpace: <#T##CGColorSpace?#>)
