@@ -139,8 +139,11 @@ class VideoCaptureViewModel {
     private func updateLocation(location: CLLocation) {
         overlayView.update("\(location.speed)", "\(location.course)")        
         
-        let img = self.overlayView.image()
-        videoCapture.overlayImage = img
+        if let image = self.overlayView.image() {
+            videoCapture.setOverlay(image: image)
+        } else {
+            assertionFailure("Image not created")
+        }
     }
     
     // MARK: - Helpers

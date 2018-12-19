@@ -25,6 +25,8 @@ class DrawableGLKView: GLKView {
     }
     
     private func setup() {
+        self.enableSetNeedsDisplay = false
+        
         // Setup GLView
         context = EAGLContext(api: .openGLES2)!
         ciContext = CIContext(eaglContext: self.context)
@@ -35,7 +37,7 @@ class DrawableGLKView: GLKView {
     func drawImage(_ image: CIImage) {
         // OpenGLES draws in pixels, not points so we scale to whatever the contents scale is.
         let scale = CGAffineTransform(scaleX: self.contentScaleFactor, y: self.contentScaleFactor)
-        let drawingRect = self.frame.applying(scale)
+        let drawingRect = self.bounds.applying(scale)
         
         // The image.extent is the bounds of the image.
         ciContext?.draw(image, in: drawingRect, from: image.extent)
