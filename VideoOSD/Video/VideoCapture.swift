@@ -310,6 +310,14 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             // https://gist.github.com/bgayman/6b27428ea48750e8306975c735bd517e
             // https://stackoverflow.com/questions/35603608/ios-overlay-two-images-with-alpha-offscreen
             
+            //!!! https://developer.apple.com/library/archive/samplecode/AVCustomEdit/Introduction/Intro.html#//apple_ref/doc/uid/DTS40013411-Intro-DontLinkElementID_2
+            
+            // !!!!!!!!
+            // https://willowtreeapps.com/ideas/how-to-apply-a-filter-to-a-video-stream-in-ios
+            // !!!!!!!!
+            
+            //!!!!!!!! https://stackoverflow.com/questions/51922595/confusion-about-cicontext-opengl-and-metal-swift-does-cicontext-use-cpu-or-g
+            
             if overlayBuffer != nil {
                 
                 CVPixelBufferLockBaseAddress( backImageBuffer,  kCVPixelBufferLock_ReadOnly );
@@ -318,7 +326,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 CVPixelBufferUnlockBaseAddress( backImageBuffer,  kCVPixelBufferLock_ReadOnly );
             
                 
-                let ttt = CIContext(options: nil)
+                let ttt = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!, options: [kCIContextWorkingColorSpace : NSNull()])
                 ttt.render(<#T##image: CIImage##CIImage#>, toBitmap: <#T##UnsafeMutableRawPointer#>, rowBytes: <#T##Int#>, bounds: <#T##CGRect#>, format: <#T##CIFormat#>, colorSpace: <#T##CGColorSpace?#>)
                 
                 
