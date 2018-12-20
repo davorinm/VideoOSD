@@ -12,7 +12,7 @@ import CoreVideo
 import VideoToolbox
 
 class ImageProcessor {
-    class func pixelBuffer(fromImage image:CGImage) -> CVPixelBuffer? {
+    class func pixelBuffer(fromImage image: CGImage) -> CVPixelBuffer? {
         let frameSize = CGSize(width: image.width, height: image.height)
         
         var pixelBuffer: CVPixelBuffer! = nil
@@ -63,7 +63,18 @@ class ImageProcessor {
         CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
     }
     
-    class func draw(buffer pixelBuffer: CVPixelBuffer, toBuffer destinationPixelBuffer: CVPixelBuffer) {
+    
+    static let overCompositingFilter = CIFilter(name: "CISourceOverCompositing")
+    
+    class func draw(buffer pixelBuffer: CVPixelBuffer, toBuffer destinationPixelBuffer: CVPixelBuffer) -> CVPixelBuffer {
+        overCompositingFilter?.setValue(CIImage(cvPixelBuffer: pixelBuffer), forKey: kCIInputImageKey)
+        overCompositingFilter?.setValue(CIImage(cvPixelBuffer: destinationPixelBuffer), forKey: kCIInputBackgroundImageKey)
+        let compositedCIImage = overCompositingFilter?.outputImage
+        
+        return destinationPixelBuffer
+        
+        
+        
         // Draw overlay
         // TODO: Create CVPixelBuffer from overlayImage, merge overlayImagePixelBuffer in video pixel buffer to remove CGContext
         // Maybe use CVPixelBufferPool

@@ -35,7 +35,7 @@ class VideoCaptureViewController: UIViewController {
         // Finish recording
         model.didEndCapturing = { [unowned self] (asset, error) in
             if let error = error {
-                assertionFailure("errorDidOccured \(error.localizedDescription)")
+                print("errorDidOccured \(error.localizedDescription)")
                 return
             }
             
@@ -82,7 +82,7 @@ class VideoCaptureViewController: UIViewController {
         return false
     }
     
-    @objc func deviceOrientationDidChange(_ notification: Notification) {
+    @objc private func deviceOrientationDidChange(_ notification: Notification) {
         let deviceOrientation = UIDevice.current.orientation
         
         let angle: Double
@@ -166,7 +166,7 @@ class VideoCaptureViewController: UIViewController {
                                               fromViewController: self,
                                               handlers: [okAction, cancelAction])
         } else {
-            AlertHandler.showAlert(title: "SUCESS", message: "Video saved to Photos", okActionTitle: "OK", fromViewController: self)
+            AlertHandler.showAlert(title: "Error", message: "Video not saved to Photos", okActionTitle: "OK", fromViewController: self)
         }
     }
 }

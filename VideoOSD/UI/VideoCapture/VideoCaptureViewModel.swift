@@ -27,7 +27,7 @@ class VideoCaptureViewModel {
     
     private var filePath: URL!
     private let videoCapture: VideoCapture = VideoCapture()
-    
+    private var displayLink: CADisplayLink!
     private var overlayView: OverlayView!
     
     var displayImage: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
@@ -41,16 +41,17 @@ class VideoCaptureViewModel {
         // Create OverlayView
         overlayView = OverlayView.createFromNib()
         
+        // Display link for refreshing video screen
+        displayLink = CADisplayLink(target: self, selector: #selector(displayLinkDidRefresh))
+        displayLink.add(to: .main, forMode: .common)
+        
+        // Provider response
         locationProvider.providerReponse.subscribe(self) { (response) in
             if let location = response.location {
                 self.updateLocation(location: location)
             } else {
                 assertionFailure("Location error \(response.error!)")
             }
-        }
-        
-        videoCapture.imageHandler = { [unowned self] (image, time) in
-            self.displayImage?(image, time)
         }
     }
     
@@ -108,7 +109,7 @@ class VideoCaptureViewModel {
             PhotoLibrary.moveToPhotos(url: self.filePath) { [unowned self] (saved, asset, error) in
                 DispatchQueue.main.async {
                     self.removeFile()
-                    self.didEndCapturing?(asset, nil)
+                    self.didEndCapturing?(asset, error)
                 }
             }
         }) { (error) in
@@ -143,6 +144,17 @@ class VideoCaptureViewModel {
             videoCapture.setOverlay(image: image)
         } else {
             assertionFailure("Image not created")
+        }
+    }
+    
+    // MARK: - DisplayLink
+    
+    @objc private func displayLinkDidRefresh() {
+        if let imageData = self.videoCapture.imageData {
+            let image = imageData.image
+            let time = imageData.time
+            
+            self.displayImage?(image, time)
         }
     }
     

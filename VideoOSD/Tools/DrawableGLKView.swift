@@ -29,9 +29,10 @@ class DrawableGLKView: GLKView {
         
         // Setup GLView
         context = EAGLContext(api: .openGLES2)!
-        ciContext = CIContext(eaglContext: self.context)
+        EAGLContext.setCurrent(context)
+        ciContext = CIContext(eaglContext: self.context, options: [CIContextOption.workingColorSpace : NSNull()])
         
-        bindDrawable()
+        self.drawableDepthFormat = .format24
     }
     
     func drawImage(_ image: CIImage) {
@@ -40,6 +41,8 @@ class DrawableGLKView: GLKView {
         let drawingRect = self.bounds.applying(scale)
         
         // The image.extent is the bounds of the image.
+        
+        bindDrawable()
         ciContext?.draw(image, in: drawingRect, from: image.extent)
         display()
     }
