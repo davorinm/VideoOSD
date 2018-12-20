@@ -87,6 +87,9 @@ class ImageProcessor {
         //!!!!!!!! https://stackoverflow.com/questions/51922595/confusion-about-cicontext-opengl-and-metal-swift-does-cicontext-use-cpu-or-g
         
         
+//        CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(source);
+//        CGColorSpaceRef cref = CVImageBufferGetColorSpace(imageBuffer);
+        
         //        CVPixelBufferLockBaseAddress( backImageBuffer,  kCVPixelBufferLock_ReadOnly );
         //        backImageFromSample = [CIImage imageWithCVPixelBuffer:backImageBuffer];
         //        [coreImageContext render:backImageFromSample toCVPixelBuffer:nextImageBuffer bounds:toRect colorSpace:rgbSpace];

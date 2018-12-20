@@ -82,7 +82,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         
         // setup video output
         do {
-            let queue = DispatchQueue(label: "com.shu223.videosamplequeue")
+            let queue = DispatchQueue(label: "videoDataOutputSampleQueue")
             videoDataOutput = AVCaptureVideoDataOutput()
             videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_32BGRA)]
             videoDataOutput.alwaysDiscardsLateVideoFrames = true
@@ -96,7 +96,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         
         // setup audio output
         do {
-            let queue = DispatchQueue(label: "com.shu223.audiosamplequeue")
+            let queue = DispatchQueue(label: "audioDataOutputSampleQueue")
             audioDataOutput = AVCaptureAudioDataOutput()
             audioDataOutput.setSampleBufferDelegate(self, queue: queue)
             guard captureSession.canAddOutput(audioDataOutput) else {
