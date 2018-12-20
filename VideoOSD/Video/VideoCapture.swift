@@ -26,7 +26,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     private var assetWriterInputAudio: AVAssetWriterInput!
     private var startSessionTime: CMTime?
     
-    private var overlayImage: UIImage?
+    private var overlayImage: CGImage?
     private var overlayBuffer: CVPixelBuffer?
     
     var isRecording: Bool {
@@ -219,33 +219,8 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     func setOverlay(image: UIImage) {
-        self.overlayImage = image
-//        self.overlayBuffer = self.buffer(from: image)
-    }
-    
-    private func buffer(from image: UIImage) -> CVPixelBuffer? {
-        let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
-        var pixelBuffer : CVPixelBuffer?
-        let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(image.size.width), Int(image.size.height), kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
-        guard (status == kCVReturnSuccess) else {
-            return nil
-        }
-        
-        CVPixelBufferLockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
-        let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer!)
-        
-        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        let context = CGContext(data: pixelData, width: Int(image.size.width), height: Int(image.size.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
-        
-        context?.translateBy(x: 0, y: image.size.height)
-        context?.scaleBy(x: 1.0, y: -1.0)
-        
-        UIGraphicsPushContext(context!)
-        image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
-        UIGraphicsPopContext()
-        CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
-        
-        return pixelBuffer
+        self.overlayImage = image.cgImage
+        self.overlayBuffer = ImageProcessor.pixelBuffer(fromImage: image.cgImage!)
     }
     
     // MARK: - Video orientation
@@ -290,28 +265,36 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     
     func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        if assetWriter != nil, assetWriter.status == .writing {
-            print("didDrop sampleBuffer")
-        }
+        print("didDrop sampleBuffer")
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // Get timestamp
+        let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+        
+        // Start session if needed
+        if assetWriter != nil, assetWriter.status == .writing {
+            // Start session
+            if startSessionTime == nil {
+                startSessionTime = sessionTime
+                assetWriter.startSession(atSourceTime: startSessionTime!)
+            }
+        }
+        
         // Append sample
         if output == videoDataOutput {
             // Get PixelBuffer
             let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
             
-            // Draw
-            write(image: overlayImage, toBuffer: pixelBuffer)
+            // Draw overlay
+            if overlayImage != nil {
+                ImageProcessor.draw(image: overlayImage!, toBuffer: pixelBuffer)
+            } else if overlayBuffer != nil {
+                ImageProcessor.draw(buffer: overlayBuffer!, toBuffer: pixelBuffer)
+            }
             
-            let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            
+            // Check assetWriter
             if assetWriter != nil, assetWriter.status == .writing {
-                // Start session
-                if startSessionTime == nil {
-                    startSessionTime = sessionTime
-                    assetWriter.startSession(atSourceTime: startSessionTime!)
-                }
                 // Append video sample
                 if assetWriterInputVideo.isReadyForMoreMediaData {
                     if assetWriterInputVideo.append(sampleBuffer) == false {
@@ -332,12 +315,8 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 self.imageHandler?(image, time)
             }
         } else if output == audioDataOutput {
+            // Check assetWriter
             if assetWriter != nil, assetWriter.status == .writing {
-                // Start session
-                if startSessionTime == nil {
-                    startSessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                    assetWriter.startSession(atSourceTime: startSessionTime!)
-                }
                 // Append audio sample
                 if assetWriterInputAudio.isReadyForMoreMediaData {
                     if assetWriterInputAudio.append(sampleBuffer) == false {
@@ -350,68 +329,5 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 }
             }
         }
-    }
-    
-    private func write(image overlayImage: UIImage?, toBuffer pixelBuffer: CVPixelBuffer) {
-        guard let overlayImage = overlayImage else {
-            return
-        }
-        
-        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-        
-        var bitmapInfo: UInt32 = CGBitmapInfo.byteOrder32Little.rawValue
-        bitmapInfo |= CGImageAlphaInfo.premultipliedFirst.rawValue & CGBitmapInfo.alphaInfoMask.rawValue
-        
-        let width = CVPixelBufferGetWidth(pixelBuffer)
-        let height = CVPixelBufferGetHeight(pixelBuffer)
-        
-        let context = CGContext(data: CVPixelBufferGetBaseAddress(pixelBuffer),
-                                width: width,
-                                height: height,
-                                bitsPerComponent: 8,
-                                bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
-                                space: CGColorSpaceCreateDeviceRGB(),
-                                bitmapInfo: bitmapInfo)
-        
-        context!.draw(overlayImage.cgImage!, in: CGRect(x: 0, y: 0, width: width, height: height))
-        
-        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
-    }
-
-    private func write(buffer pixelBuffer: CVPixelBuffer?, toBuffer destinationPixelBuffer: CVPixelBuffer) {
-        // Draw overlay
-        // TODO: Create CVPixelBuffer from overlayImage, merge overlayImagePixelBuffer in video pixel buffer to remove CGContext
-        // Maybe use CVPixelBufferPool
-        // CISourceOverCompositing https://stackoverflow.com/questions/48969223/core-image-filter-cisourceovercompositing-not-appearing-as-expected-with-alpha-o
-        // https://stackoverflow.com/a/4057608
-        // https://stackoverflow.com/questions/21753926/avfoundation-add-text-to-the-cmsamplebufferref-video-frame/21754725
-        // https://stackoverflow.com/questions/46524830/how-do-i-draw-onto-a-cvpixelbufferref-that-is-planar-ycbcr-420f-yuv-nv12-not-rgb/46524831#46524831
-        // https://stackoverflow.com/questions/30609241/render-dynamic-text-onto-cvpixelbufferref-while-recording-video
-        //
-        //!!!! https://www.objc.io/issues/23-video/core-image-video/
-        // https://gist.github.com/bgayman/6b27428ea48750e8306975c735bd517e
-        // https://stackoverflow.com/questions/35603608/ios-overlay-two-images-with-alpha-offscreen
-        //
-        //!!! https://developer.apple.com/library/archive/samplecode/AVCustomEdit/Introduction/Intro.html#//apple_ref/doc/uid/DTS40013411-Intro-DontLinkElementID_2
-        //
-        //!!!!!!!!
-        // https://willowtreeapps.com/ideas/how-to-apply-a-filter-to-a-video-stream-in-ios
-        //!!!!!!!!
-        //
-        //
-        //!!!!!!!! https://stackoverflow.com/questions/51922595/confusion-about-cicontext-opengl-and-metal-swift-does-cicontext-use-cpu-or-g
-
-        if pixelBuffer == nil {
-            return
-        }
-        
-//        CVPixelBufferLockBaseAddress( backImageBuffer,  kCVPixelBufferLock_ReadOnly );
-//        backImageFromSample = [CIImage imageWithCVPixelBuffer:backImageBuffer];
-//        [coreImageContext render:backImageFromSample toCVPixelBuffer:nextImageBuffer bounds:toRect colorSpace:rgbSpace];
-//        CVPixelBufferUnlockBaseAddress( backImageBuffer,  kCVPixelBufferLock_ReadOnly );
-//
-//
-//        let ttt = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!, options: [CIContextOption.workingColorSpace : NSNull()])
-//        ttt.render(<#T##image: CIImage##CIImage#>, toBitmap: <#T##UnsafeMutableRawPointer#>, rowBytes: <#T##Int#>, bounds: <#T##CGRect#>, format: <#T##CIFormat#>, colorSpace: <#T##CGColorSpace?#>)
     }
 }

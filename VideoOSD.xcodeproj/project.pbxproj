@@ -38,6 +38,8 @@
 		721CBFF221BE6AA400C89C92 /* VideoOSDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFF121BE6AA400C89C92 /* VideoOSDTests.swift */; };
 		721CBFFA21BE6ABD00C89C92 /* DateTimeFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFF921BE6ABD00C89C92 /* DateTimeFormatterTests.swift */; };
 		721CBFFB21BE6AE400C89C92 /* DateTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721CBFE921BE693A00C89C92 /* DateTimeFormatter.swift */; };
+		725B6E4B21CB822E00364084 /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B6E4A21CB822E00364084 /* ImageProcessor.swift */; };
+		725B6E4D21CB90A900364084 /* VideoProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725B6E4C21CB90A900364084 /* VideoProcessor.swift */; };
 		72FB275821C3BCEF009DEA23 /* DrawableGLKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FB275721C3BCEF009DEA23 /* DrawableGLKView.swift */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +93,8 @@
 		721CBFF321BE6AA400C89C92 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		721CBFF921BE6ABD00C89C92 /* DateTimeFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeFormatterTests.swift; sourceTree = "<group>"; };
 		721CBFFF21C24AB400C89C92 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		725B6E4A21CB822E00364084 /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
+		725B6E4C21CB90A900364084 /* VideoProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProcessor.swift; sourceTree = "<group>"; };
 		72FB275721C3BCEF009DEA23 /* DrawableGLKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableGLKView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -145,6 +149,8 @@
 				1ED1B99921B1C73F0018396B /* AlertHandler.swift */,
 				721CBFE921BE693A00C89C92 /* DateTimeFormatter.swift */,
 				72FB275721C3BCEF009DEA23 /* DrawableGLKView.swift */,
+				725B6E4A21CB822E00364084 /* ImageProcessor.swift */,
+				725B6E4C21CB90A900364084 /* VideoProcessor.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -383,6 +389,8 @@
 			files = (
 				1E73123321B44074008DC499 /* VideoCaptureViewModel.swift in Sources */,
 				1E01AE282183B5AB007AF872 /* VideoPreviewVideoController.swift in Sources */,
+				725B6E4D21CB90A900364084 /* VideoProcessor.swift in Sources */,
+				725B6E4B21CB822E00364084 /* ImageProcessor.swift in Sources */,
 				1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */,
 				1E83D24921AAE37900B4F7BC /* LocationProvider.swift in Sources */,
 				1EBC0CCA21B5D3E800C32420 /* AVCaptureDevice+Extension.swift in Sources */,
