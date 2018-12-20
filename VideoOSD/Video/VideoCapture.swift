@@ -84,6 +84,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         do {
             let queue = DispatchQueue(label: "videoDataOutputSampleQueue")
             videoDataOutput = AVCaptureVideoDataOutput()
+            // TODO: Ckeck for performance for others formats
             videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_32BGRA)]
             videoDataOutput.alwaysDiscardsLateVideoFrames = true
             videoDataOutput.setSampleBufferDelegate(self, queue: queue)
