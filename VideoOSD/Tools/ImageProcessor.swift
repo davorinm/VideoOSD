@@ -135,6 +135,68 @@ class ImageProcessor {
         
         return pixelBuffer
     }
+    
+    class func copy(pixelBuffer: CVPixelBuffer) -> CVPixelBuffer {
+        precondition(CFGetTypeID(pixelBuffer) == CVPixelBufferGetTypeID(), "copy() cannot be called on a non-CVPixelBuffer")
+        
+        var _copy: CVPixelBuffer?
+        
+        CVPixelBufferCreate(
+            nil,
+            CVPixelBufferGetWidth(pixelBuffer),
+            CVPixelBufferGetHeight(pixelBuffer),
+            CVPixelBufferGetPixelFormatType(pixelBuffer),
+            CVBufferGetAttachments(pixelBuffer, .shouldPropagate),
+            &_copy)
+        
+        guard let copy = _copy else {
+            fatalError()
+        }
+        
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        CVPixelBufferLockBaseAddress(copy, [])
+        
+        defer {
+            CVPixelBufferUnlockBaseAddress(copy, [])
+            CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
+        }
+        
+        for plane in 0 ..< CVPixelBufferGetPlaneCount(pixelBuffer) {
+            let dest        = CVPixelBufferGetBaseAddressOfPlane(copy, plane)
+            let source      = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, plane)
+            let height      = CVPixelBufferGetHeightOfPlane(pixelBuffer, plane)
+            let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, plane)
+            
+            memcpy(dest, source, height * bytesPerRow)
+        }
+        
+        return copy
+    }
+    
+    func deepcopy(pixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        let format = CVPixelBufferGetPixelFormatType(pixelBuffer)
+        var pixelBufferCopyOptional:CVPixelBuffer?
+        
+        CVPixelBufferCreate(nil, width, height, format, nil, &pixelBufferCopyOptional)
+        
+        if let pixelBufferCopy = pixelBufferCopyOptional {
+            CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+            CVPixelBufferLockBaseAddress(pixelBufferCopy, [])
+            
+            let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer)
+            let dataSize = CVPixelBufferGetDataSize(pixelBuffer)
+            print("dataSize: \(dataSize)")
+            let target = CVPixelBufferGetBaseAddress(pixelBufferCopy)
+            
+            memcpy(target, baseAddress, dataSize)
+            
+            CVPixelBufferUnlockBaseAddress(pixelBufferCopy, [])
+            CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
+        }
+        return pixelBufferCopyOptional
+    }
 }
 
 class CurrentTimeEffect {
