@@ -200,6 +200,45 @@ class ImageProcessor {
         }
         return pixelBufferCopyOptional
     }
+    
+//    func copyYUVBuffer() {
+//        // Copy the pixel buffer
+//        CVPixelBufferRef pixelBufferCopy = NULL;
+//        CVReturn status = CVPixelBufferCreate(kCFAllocatorDefault, bufferWidth, bufferHeight, pixelFormat, NULL, &pixelBufferCopy);
+//        CVPixelBufferLockBaseAddress(pixelBufferCopy, 0);
+//        //BGR
+//        //    uint8_t *copyBaseAddress = CVPixelBufferGetBaseAddress(pixelBufferCopy);
+//        //    memcpy(copyBaseAddress, baseAddress, bufferHeight * bytesPerRow);
+//        uint8_t *yDestPlane = CVPixelBufferGetBaseAddressOfPlane(pixelBufferCopy, 0);
+//        //YUV
+//        uint8_t *yPlane = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
+//        memcpy(yDestPlane, yPlane, bufferWidth * bufferHeight);
+//        uint8_t *uvDestPlane = CVPixelBufferGetBaseAddressOfPlane(pixelBufferCopy, 1);
+//        uint8_t *uvPlane = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
+//        memcpy(uvDestPlane, uvPlane, bufferWidth * bufferHeight/2);
+//        CVPixelBufferUnlockBaseAddress(pixelBufferCopy, 0);
+//    }
+//
+//    func copyRGBBufefr() {
+//        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+//
+//        // Get pixel buffer info
+//        const int kBytesPerPixel = 4;
+//        CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+//        int bufferWidth = (int)CVPixelBufferGetWidth(pixelBuffer);
+//        int bufferHeight = (int)CVPixelBufferGetHeight(pixelBuffer);
+//        size_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
+//        uint8_t *baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer);
+//
+//        // Copy the pixel buffer
+//        CVPixelBufferRef pixelBufferCopy = NULL;
+//        CVReturn status = CVPixelBufferCreate(kCFAllocatorDefault, bufferWidth, bufferHeight, kCVPixelFormatType_32BGRA, NULL, &pixelBufferCopy);
+//        CVPixelBufferLockBaseAddress(pixelBufferCopy, 0);
+//        uint8_t *copyBaseAddress = CVPixelBufferGetBaseAddress(pixelBufferCopy);
+//        memcpy(copyBaseAddress, baseAddress, bufferHeight * bytesPerRow);
+//
+//        // Do what needs to be done with the 2 pixel buffers
+//    }
 }
 
 class CurrentTimeEffect {
