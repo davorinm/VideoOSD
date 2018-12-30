@@ -195,11 +195,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         createWriter(fileUrl: fileUrl)
         
         if assetWriter.startWriting() {
-            // Start session
-            let time = CMTime(seconds: CACurrentMediaTime(), preferredTimescale: 1000000)
-            startSessionTime = time
-            assetWriter.startSession(atSourceTime: time)
-            
             completion()
         } else {
             error(assetWriter.error)
@@ -207,9 +202,6 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     func stopRecording(completion: @escaping (() -> Void), error: @escaping ((Error?) -> Void)) {
-        let time = CMTime(seconds: CACurrentMediaTime(), preferredTimescale: 1000000)
-        assetWriter.endSession(atSourceTime: time)
-        
         assetWriterInputVideo.markAsFinished()
         assetWriterInputAudio.markAsFinished()
         
@@ -235,6 +227,8 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     
     func setOverlay(image: UIImage) {
         self.overlayImage = image.cgImage
+        
+        // TODO: Check drawing to overlayBuffer
 //        self.overlayBuffer = ImageProcessor.pixelBuffer(fromImage: image.cgImage!)
     }
     
