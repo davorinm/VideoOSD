@@ -13,6 +13,10 @@ class VideoCaptureViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        model.didLoad = { [unowned self] in
+            self.model.start()
+        }
+        
         // Video data
         model.displayImage = { [unowned self] (image, timestamp) in
             // Time
@@ -48,6 +52,11 @@ class VideoCaptureViewController: UIViewController {
             self.previousVideoExists()
         }
         
+        // Camera not authorized
+        model.showVideoPermissionsError = { [unowned self] in
+            self.showVideoPermissionsError()
+        }
+        
         model.load()
     }
     
@@ -60,7 +69,6 @@ class VideoCaptureViewController: UIViewController {
                                                object: nil)
         
         navigationController?.setNavigationBarHidden(true, animated: animated)
-        model.start()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -168,5 +176,23 @@ class VideoCaptureViewController: UIViewController {
         } else {
             AlertHandler.showAlert(title: "Error", message: "Video not saved to Photos", okActionTitle: "OK", fromViewController: self)
         }
+    }
+    
+    // MARK: - Permissions
+    
+    private func showVideoPermissionsError() {
+        let settingsAction = UIAlertAction(title: "Settings", style: .cancel) { _ in
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url, options: [:], completionHandler: { _ in
+                    // TODO: Handle
+                })
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default)
+        
+        AlertHandler.showAlertWithActions(title: "Error",
+                                          message: "Camera access is denied",
+                                          fromViewController: self,
+                                          handlers: [cancelAction, settingsAction])
     }
 }

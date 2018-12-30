@@ -229,6 +229,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             
             // Cleanup
             self.startSessionTime = nil
+            self.assetWriter = nil
         }
     }
     
@@ -283,6 +284,28 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // Get timestamp
+        let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+        
+        // Start session if needed
+        if assetWriter != nil, assetWriter.status == .writing {
+            // Start session
+            if startSessionTime == nil {
+                startSessionTime = sessionTime
+                assetWriter.startSession(atSourceTime: startSessionTime!)
+            }
+        }
+        
+        if assetWriter != nil, assetWriter.status == .failed {
+            print("Error occured status = \(assetWriter.status.rawValue), \(assetWriter.error!.localizedDescription)")
+            return
+        }
+        
+        if !CMSampleBufferDataIsReady(sampleBuffer) {
+            print("CMSampleBufferDataIsReady not")
+            return
+        }
+        
         // Append sample
         if output == videoDataOutput {
             // Get PixelBuffer
@@ -296,16 +319,18 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             }
             
             // Check assetWriter
-            if assetWriter != nil, assetWriter.status == .writing {
-                // Append video sample
-                if assetWriterInputVideo.isReadyForMoreMediaData {
-                    if assetWriterInputVideo.append(sampleBuffer) == false {
-                        if assetWriter.status == .failed {
-                            print("AVAssetWriter error \(assetWriter.error!) \(assetWriter.status.rawValue)")
+            if assetWriter != nil {
+                if assetWriter.status == .writing {
+                    // Append video sample
+                    if assetWriterInputVideo.isReadyForMoreMediaData {
+                        if assetWriterInputVideo.append(sampleBuffer) == false {
+                            print("!!!!!AVAssetWriter error \(assetWriter.error!) \(assetWriter.status.rawValue)")
                         }
+                    } else {
+                        print("NOT ReadyForMoreMediaData video")
                     }
                 } else {
-                    print("NOT ReadyForMoreMediaData video")
+                    print("not writing \(assetWriter.status.rawValue)")
                 }
             }
             
@@ -319,16 +344,18 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             self.imageData = ImageData(image: image, time: time)
         } else if output == audioDataOutput {
             // Check assetWriter
-            if assetWriter != nil, assetWriter.status == .writing {
-                // Append audio sample
-                if assetWriterInputAudio.isReadyForMoreMediaData {
-                    if assetWriterInputAudio.append(sampleBuffer) == false {
-                        if assetWriter.status == .failed {
-                            assertionFailure("AVAssetWriter error \(assetWriter.error!)")
+            if assetWriter != nil {
+                if assetWriter.status == .writing {
+                    // Append audio sample
+                    if assetWriterInputAudio.isReadyForMoreMediaData {
+                        if assetWriterInputAudio.append(sampleBuffer) == false {
+                            print("!!!!!AVAssetWriter error \(assetWriter.error!) \(assetWriter.status.rawValue)")
                         }
+                    } else {
+                        print("NOT ReadyForMoreMediaData audio")
                     }
                 } else {
-                    print("NOT ReadyForMoreMediaData audio")
+                    print("not writing \(assetWriter.status.rawValue)")
                 }
             }
         }

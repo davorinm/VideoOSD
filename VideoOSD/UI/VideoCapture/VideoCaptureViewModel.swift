@@ -12,6 +12,11 @@ import CoreLocation
 import Photos
 
 class VideoCaptureViewModel {
+    enum VideoCaptureViewModelError: Error {
+        case video
+        case photosDenied
+    }
+    
     var isRecording: Bool {
         get {
             return videoCapture.isRecording
@@ -30,10 +35,12 @@ class VideoCaptureViewModel {
     private var displayLink: CADisplayLink!
     private var overlayView: OverlayView!
     
-    var displayImage: ((_ image: CIImage, _ time: TimeInterval) -> Void)?
-    var didStartCapturing: ((_ error: Error?) -> Void)?
-    var didEndCapturing: ((_ asset: PHAsset?, _ error: Error?) -> Void)?
+    var didLoad: (() -> Void)!
+    var displayImage: ((_ image: CIImage, _ time: TimeInterval) -> Void)!
+    var didStartCapturing: ((_ error: Error?) -> Void)!
+    var didEndCapturing: ((_ asset: PHAsset?, _ error: Error?) -> Void)!
     var previousVideoExists: (() -> Void)?
+    var showVideoPermissionsError: (() -> Void)!
     
     // MARK: - Public
     
@@ -63,27 +70,12 @@ class VideoCaptureViewModel {
             removeFile()
         }
         
-        // Setup videoCapture
-//        let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
-        let spec = VideoSpec(fps: nil, size: nil)
-        videoCapture.setup(cameraType: CameraType.back, preferredSpec: spec)
-        
-        // Initial orientation        
-        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
-        
-        // Set frame for overlay view
-        if let size = videoCapture.videoDimensions {
-            print("videoDimensions \(size)")
-            
-            let ratio = size.width / size.height
-            let cS = CGSize(width: 512, height: 512 / ratio)
-            
-            var overlayViewFrame = self.overlayView.frame
-            overlayViewFrame.size = cS
-            self.overlayView.frame = overlayViewFrame
-        } else {
-            assertionFailure("Size is a must!!")
-        }
+        VideoHelper.checkAuthorization(authorized: { [unowned self] in
+            self.setupCamera()
+            self.didLoad()
+        }, denied: { [unowned self] in
+            self.showVideoPermissionsError()
+        })
     }
     
     func start() {
@@ -98,22 +90,20 @@ class VideoCaptureViewModel {
     
     func startRecording() {
         videoCapture.startRecording(fileUrl: filePath, completion: { [unowned self] in
-            self.didStartCapturing?(nil)
+            self.didStartCapturing(nil)
         }) { (error) in
-            self.didStartCapturing?(error)
+            self.didStartCapturing(error)
         }
     }
     
     func endRecording() {
         videoCapture.stopRecording(completion: { [unowned self] in
-            PhotoLibrary.moveToPhotos(url: self.filePath) { [unowned self] (saved, asset, error) in
-                DispatchQueue.main.async {
-                    self.removeFile()
-                    self.didEndCapturing?(asset, error)
-                }
-            }
+            self.moveToPhotos(finish: { [unowned self] (asset, error) in
+                self.didEndCapturing(asset, error)
+            })
+            
         }) { (error) in
-            self.didEndCapturing?(nil, error)
+            self.didEndCapturing(nil, error)
         }
     }
     
@@ -133,6 +123,32 @@ class VideoCaptureViewModel {
     
     func changeOrientation(orientation: UIDeviceOrientation) {
         videoCapture.changeOrientation(orientation: orientation)
+    
+    // MARK: - Camera
+    
+    private func setupCamera() {
+        // TODO: Select format
+//        let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
+        let spec = VideoSpec(fps: nil, size: nil)
+        // TODO: With defined VideoSpec saving is erroneous
+        videoCapture.setup(cameraType: CameraType.back, preferredSpec: nil)
+        
+        // Initial orientation
+//        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
+        
+        // Set frame for overlay view
+        if let size = videoCapture.videoDimensions {
+            print("videoDimensions \(size)")
+            
+            let ratio = size.width / size.height
+            let cS = CGSize(width: 512, height: 512 / ratio)
+            
+            var overlayViewFrame = self.overlayView.frame
+            overlayViewFrame.size = cS
+            self.overlayView.frame = overlayViewFrame
+        } else {
+            assertionFailure("Size is a must!!")
+        }
     }
     
     // MARK: - Location
@@ -154,7 +170,7 @@ class VideoCaptureViewModel {
             let image = imageData.image
             let time = imageData.time
             
-            self.displayImage?(image, time)
+            self.displayImage(image, time)
         }
     }
     
@@ -176,5 +192,21 @@ class VideoCaptureViewModel {
     private func removeFile() {
         // Remove file at path
         try? FileManager.default.removeItem(at: self.filePath)
+    }
+    
+    private func moveToPhotos(finish: @escaping ((_ asset: PHAsset?, _ error: Error?) -> Void)) {
+        PhotosHelper.checkAuthorization(authorized: { [unowned self] in
+            PhotosHelper.moveToPhotos(url: self.filePath) { [unowned self] (saved, asset, error) in
+                DispatchQueue.main.async {
+                    if saved {
+                        self.removeFile()
+                    }
+                    
+                    finish(asset, error)
+                }
+            }
+        }, denied: {
+            finish(nil, VideoCaptureViewModelError.photosDenied)
+        })
     }
 }
