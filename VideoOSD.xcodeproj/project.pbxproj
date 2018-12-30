@@ -12,7 +12,7 @@
 		1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */; };
 		1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF02134867900AB9685 /* OverlayView.swift */; };
 		1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF52134931A00AB9685 /* UIView+Xib.swift */; };
-		1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA902131405200943AC4 /* PhotoLibrary.swift */; };
+		1E24CA912131405200943AC4 /* PhotosHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA902131405200943AC4 /* PhotosHelper.swift */; };
 		1E24CA942131423A00943AC4 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA932131423A00943AC4 /* Filters.swift */; };
 		1E4A067A2150400400DC4E47 /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4A06792150400400DC4E47 /* OverlayView.xib */; };
 		1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC372128A8F1008F1B20 /* AppDelegate.swift */; };
@@ -24,11 +24,12 @@
 		1E73123321B44074008DC499 /* VideoCaptureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E73123221B44074008DC499 /* VideoCaptureViewModel.swift */; };
 		1E83D24921AAE37900B4F7BC /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E83D24721AAE37900B4F7BC /* LocationProvider.swift */; };
 		1E83D24A21AAE37900B4F7BC /* LocationProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E83D24821AAE37900B4F7BC /* LocationProviderImpl.swift */; };
+		1E9D910621D8BA5200B02E3D /* VideoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9D910521D8BA5200B02E3D /* VideoHelper.swift */; };
 		1EBC0CC121B5D0FF00C32420 /* AttributedSpeechViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC021B5D0FF00C32420 /* AttributedSpeechViewController.swift */; };
 		1EBC0CC321B5D16100C32420 /* MainTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC221B5D16100C32420 /* MainTest.storyboard */; };
 		1EBC0CC621B5D39F00C32420 /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */; };
 		1EBC0CC821B5D3C300C32420 /* VideoCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */; };
-		1EBC0CCA21B5D3E800C32420 /* AVCaptureDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Extension.swift */; };
+		1EBC0CCA21B5D3E800C32420 /* AVCaptureDevice+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Format.swift */; };
 		1EC6EF7021B07AFE009EF247 /* ObservableEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF6E21B07AFD009EF247 /* ObservableEvent.swift */; };
 		1EC6EF7121B07AFE009EF247 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF6F21B07AFD009EF247 /* Disposable.swift */; };
 		1EC6EF7421B07B3B009EF247 /* ProviderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF7321B07B3B009EF247 /* ProviderError.swift */; };
@@ -60,7 +61,7 @@
 		1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableTimer.swift; sourceTree = "<group>"; };
 		1E21CCF02134867900AB9685 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		1E21CCF52134931A00AB9685 /* UIView+Xib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Xib.swift"; sourceTree = "<group>"; };
-		1E24CA902131405200943AC4 /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
+		1E24CA902131405200943AC4 /* PhotosHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosHelper.swift; sourceTree = "<group>"; };
 		1E24CA932131423A00943AC4 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		1E4A06792150400400DC4E47 /* OverlayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
 		1E53CC342128A8F1008F1B20 /* VideoOSD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoOSD.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,11 +78,12 @@
 		1E73123221B44074008DC499 /* VideoCaptureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCaptureViewModel.swift; sourceTree = "<group>"; };
 		1E83D24721AAE37900B4F7BC /* LocationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
 		1E83D24821AAE37900B4F7BC /* LocationProviderImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationProviderImpl.swift; sourceTree = "<group>"; };
+		1E9D910521D8BA5200B02E3D /* VideoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHelper.swift; sourceTree = "<group>"; };
 		1EBC0CC021B5D0FF00C32420 /* AttributedSpeechViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedSpeechViewController.swift; sourceTree = "<group>"; };
 		1EBC0CC221B5D16100C32420 /* MainTest.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainTest.storyboard; sourceTree = "<group>"; };
 		1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
 		1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCameraType.swift; sourceTree = "<group>"; };
-		1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Extension.swift"; sourceTree = "<group>"; };
+		1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Format.swift"; sourceTree = "<group>"; };
 		1EC6EF6E21B07AFD009EF247 /* ObservableEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableEvent.swift; sourceTree = "<group>"; };
 		1EC6EF6F21B07AFD009EF247 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		1EC6EF7321B07B3B009EF247 /* ProviderError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderError.swift; sourceTree = "<group>"; };
@@ -142,7 +144,8 @@
 			isa = PBXGroup;
 			children = (
 				1EC6EF7221B07B04009EF247 /* Event */,
-				1E24CA902131405200943AC4 /* PhotoLibrary.swift */,
+				1E24CA902131405200943AC4 /* PhotosHelper.swift */,
+				1E9D910521D8BA5200B02E3D /* VideoHelper.swift */,
 				1E24CA932131423A00943AC4 /* Filters.swift */,
 				1E21CCF52134931A00AB9685 /* UIView+Xib.swift */,
 				1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */,
@@ -194,7 +197,7 @@
 			children = (
 				1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */,
 				1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */,
-				1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Extension.swift */,
+				1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Format.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -291,10 +294,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E53CC462128A8F2008F1B20 /* Build configuration list for PBXNativeTarget "VideoOSD" */;
 			buildPhases = (
+				725B6E4E21CB9EC500364084 /* Tag Processor */,
 				1E53CC302128A8F1008F1B20 /* Sources */,
 				1E53CC312128A8F1008F1B20 /* Frameworks */,
 				1E53CC322128A8F1008F1B20 /* Resources */,
-				725B6E4E21CB9EC500364084 /* Tag Processor */,
 			);
 			buildRules = (
 			);
@@ -410,15 +413,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E73123321B44074008DC499 /* VideoCaptureViewModel.swift in Sources */,
+				1E9D910621D8BA5200B02E3D /* VideoHelper.swift in Sources */,
 				1E01AE282183B5AB007AF872 /* VideoPreviewVideoController.swift in Sources */,
 				725B6E4D21CB90A900364084 /* VideoProcessor.swift in Sources */,
 				725B6E4B21CB822E00364084 /* ImageProcessor.swift in Sources */,
 				1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */,
 				1E83D24921AAE37900B4F7BC /* LocationProvider.swift in Sources */,
-				1EBC0CCA21B5D3E800C32420 /* AVCaptureDevice+Extension.swift in Sources */,
+				1EBC0CCA21B5D3E800C32420 /* AVCaptureDevice+Format.swift in Sources */,
 				1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */,
 				1EBC0CC121B5D0FF00C32420 /* AttributedSpeechViewController.swift in Sources */,
-				1E24CA912131405200943AC4 /* PhotoLibrary.swift in Sources */,
+				1E24CA912131405200943AC4 /* PhotosHelper.swift in Sources */,
 				1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */,
 				1ED1B99A21B1C73F0018396B /* AlertHandler.swift in Sources */,
 				1E24CA942131423A00943AC4 /* Filters.swift in Sources */,

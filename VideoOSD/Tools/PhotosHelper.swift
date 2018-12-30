@@ -1,5 +1,5 @@
 //
-//  PhotoLibrary.swift
+//  PhotosHelper.swift
 //  VideoOSD
 //
 //  Created by Davorin Madaric on 25/08/2018.
@@ -9,7 +9,26 @@
 import Foundation
 import Photos
 
-class PhotoLibrary {
+class PhotosHelper {
+    class func checkAuthorization(authorized: @escaping (() -> Void), denied: @escaping (() -> Void)) {
+        switch PHPhotoLibrary.authorizationStatus() {
+        case .notDetermined:
+            PhotosHelper.requestAuthorization(authorized: authorized, denied: denied)
+        case .restricted:
+            denied()
+        case .denied:
+            denied()
+        case .authorized:
+            authorized()
+        }
+    }
+    
+    class func requestAuthorization(authorized: @escaping (() -> Void), denied: @escaping (() -> Void)) {
+        PHPhotoLibrary.requestAuthorization { _ in
+            PhotosHelper.checkAuthorization(authorized: authorized, denied: denied)
+        }
+    }
+    
     class func moveToPhotos(url: URL, finished: @escaping ((_ saved: Bool, _ asset: PHAsset?, _ error: Error?) -> Void)) {
         // TODO: Create album - https://stackoverflow.com/questions/27008641/save-images-with-phimagemanager-to-custom-album
         var assetPlaceholder: PHObjectPlaceholder?
