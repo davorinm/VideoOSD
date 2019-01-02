@@ -143,7 +143,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                     fatalError("Error adding videoDeviceInput")
                 }
                 
-                // Remove inputs
+                // Remove video inputs
                 captureSession.inputs.forEach { (captureInput) in
                     if let captInp = captureInput as? AVCaptureDeviceInput, captInp.device.hasMediaType(.video) {
                         captureSession.removeInput(captureInput)
