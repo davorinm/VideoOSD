@@ -123,7 +123,7 @@ class VideoCaptureViewModel {
     
     func deviceOrientationDidChange(orientation: UIDeviceOrientation) {
         updateOverlayViewFrame()
-        videoCapture.changeOrientation(orientation: orientation)
+        videoCapture.deviceOrientationDidChange(orientation: orientation)
     }
     
     // MARK: - Camera
