@@ -10,7 +10,7 @@ import Foundation
 import GLKit
 
 class DrawableGLKView: GLKView {
-    var ciContext: CIContext?
+    var ciContext: CIContext!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,7 +43,7 @@ class DrawableGLKView: GLKView {
         // The image.extent is the bounds of the image.
         
         bindDrawable()
-        ciContext?.draw(image, in: drawingRect, from: image.extent)
+        ciContext.draw(image, in: drawingRect, from: image.extent)
         display()
     }
 }

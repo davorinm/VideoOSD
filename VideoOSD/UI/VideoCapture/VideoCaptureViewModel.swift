@@ -50,7 +50,7 @@ class VideoCaptureViewModel {
         
         // Display link for refreshing video screen
         displayLink = CADisplayLink(target: self, selector: #selector(displayLinkDidRefresh))
-        displayLink.add(to: .main, forMode: .common)
+        displayLink.add(to: .current, forMode: .default)
         
         // Provider response
         locationProvider.providerReponse.subscribe(self) { (response) in
@@ -137,18 +137,7 @@ class VideoCaptureViewModel {
 //        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
         
         // Set frame for overlay view
-        if let size = videoCapture.videoDimensions {
-            print("videoDimensions \(size)")
-            
-            let ratio = size.width / size.height
-            let cS = CGSize(width: 512, height: 512 / ratio)
-            
-            var overlayViewFrame = self.overlayView.frame
-            overlayViewFrame.size = cS
-            self.overlayView.frame = overlayViewFrame
-        } else {
-            assertionFailure("Size is a must!!")
-        }
+        updateOverlayViewFrame()
     }
     
     // MARK: - Location
@@ -175,6 +164,15 @@ class VideoCaptureViewModel {
     }
     
     // MARK: - Helpers
+    
+    private func updateOverlayViewFrame() {
+        guard let size = videoCapture.videoDimensions else {
+            assertionFailure("Size is a must!!")
+            return
+        }
+        
+        self.overlayView.updateFrame(size: size)
+    }
     
     private func createFilePath() {
         // Path for output file

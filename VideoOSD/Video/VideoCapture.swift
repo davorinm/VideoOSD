@@ -157,9 +157,9 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         do {
             assetWriter = try AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
             
-            let outputSettings = videoDataOutput.recommendedVideoSettingsForAssetWriter(writingTo: AVFileType.mov)
+            let videoOutputSettings = videoDataOutput.recommendedVideoSettingsForAssetWriter(writingTo: AVFileType.mov)
             
-            assetWriterInputVideo = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: outputSettings)
+            assetWriterInputVideo = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoOutputSettings)
             assetWriterInputVideo.expectsMediaDataInRealTime = true
             assetWriter.add(assetWriterInputVideo)
             

@@ -21,7 +21,6 @@ class OverlayView: UIView {
     }
     
     private func setup() {
-        
         renderer = UIGraphicsImageRenderer(bounds: bounds)
         
         // First
