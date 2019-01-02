@@ -273,13 +273,12 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         // Get timestamp
         let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         
+        let assetWriterWriting: Bool = assetWriter?.status == .writing
+        
         // Start session if needed
-        if assetWriter != nil, assetWriter.status == .writing {
-            // Start session
-            if startSessionTime == nil {
-                startSessionTime = sessionTime
-                assetWriter.startSession(atSourceTime: startSessionTime!)
-            }
+        if assetWriterWriting, startSessionTime == nil {
+            startSessionTime = sessionTime
+            assetWriter.startSession(atSourceTime: startSessionTime!)
         }
         
         if assetWriter != nil, assetWriter.status == .failed {
@@ -287,7 +286,8 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             return
         }
         
-        if !CMSampleBufferDataIsReady(sampleBuffer) {
+        // Check sample
+        guard CMSampleBufferDataIsReady(sampleBuffer) else {
             print("CMSampleBufferDataIsReady not")
             return
         }
@@ -305,18 +305,14 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             }
             
             // Check assetWriter
-            if assetWriter != nil {
-                if assetWriter.status == .writing {
-                    // Append video sample
-                    if assetWriterInputVideo.isReadyForMoreMediaData {
-                        if assetWriterInputVideo.append(sampleBuffer) == false {
-                            print("!!!!!AVAssetWriter error \(assetWriter.error!) \(assetWriter.status.rawValue)")
-                        }
-                    } else {
-                        print("NOT ReadyForMoreMediaData video")
+            if assetWriterWriting {
+                // Append video sample
+                if assetWriterInputVideo.isReadyForMoreMediaData {
+                    if assetWriterInputVideo.append(sampleBuffer) == false {
+                        print("!!!!!AVAssetWriter error \(assetWriter.error!) \(assetWriter.status.rawValue)")
                     }
                 } else {
-                    print("not writing \(assetWriter.status.rawValue)")
+                    print("NOT ReadyForMoreMediaData video")
                 }
             }
             
@@ -330,18 +326,14 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             self.imageData = ImageData(image: image, time: time)
         } else if output == audioDataOutput {
             // Check assetWriter
-            if assetWriter != nil {
-                if assetWriter.status == .writing {
-                    // Append audio sample
-                    if assetWriterInputAudio.isReadyForMoreMediaData {
-                        if assetWriterInputAudio.append(sampleBuffer) == false {
-                            print("!!!!!AVAssetWriter error \(assetWriter.error!) \(assetWriter.status.rawValue)")
-                        }
-                    } else {
-                        print("NOT ReadyForMoreMediaData audio")
+            if assetWriterWriting {
+                // Append audio sample
+                if assetWriterInputAudio.isReadyForMoreMediaData {
+                    if assetWriterInputAudio.append(sampleBuffer) == false {
+                        print("!!!!!AVAssetWriter error \(assetWriter.error!) \(assetWriter.status.rawValue)")
                     }
                 } else {
-                    print("not writing \(assetWriter.status.rawValue)")
+                    print("NOT ReadyForMoreMediaData audio")
                 }
             }
         }
