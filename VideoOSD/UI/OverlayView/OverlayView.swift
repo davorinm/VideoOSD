@@ -44,11 +44,15 @@ class OverlayView: UIView {
     }
     
     func updateFrame(size: CGSize) {
+        print("videoDimensions \(size)")
+        
         let ratio = size.width / size.height
         let cS = CGSize(width: 512, height: 512 / ratio)
         
         var overlayViewFrame = self.frame
         overlayViewFrame.size = cS
         self.frame = overlayViewFrame
+        
+        print("overlay frame \(frame)")
     }
 }
