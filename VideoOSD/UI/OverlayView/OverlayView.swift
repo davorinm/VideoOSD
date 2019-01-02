@@ -42,4 +42,13 @@ class OverlayView: UIView {
             layer.render(in: rendererContext.cgContext)
         }
     }
+    
+    func updateFrame(size: CGSize) {
+        let ratio = size.width / size.height
+        let cS = CGSize(width: 512, height: 512 / ratio)
+        
+        var overlayViewFrame = self.frame
+        overlayViewFrame.size = cS
+        self.frame = overlayViewFrame
+    }
 }
