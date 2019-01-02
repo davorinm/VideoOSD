@@ -139,7 +139,11 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
                 }
                 
                 // Remove inputs
-                captureSession.inputs.forEach({ captureSession.removeInput($0) })
+                captureSession.inputs.forEach { (captureInput) in
+                    if let captInp = captureInput as? AVCaptureDeviceInput, captInp.device.hasMediaType(.video) {
+                        captureSession.removeInput(captureInput)
+                    }
+                }
                 
                 // Add input
                 let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
