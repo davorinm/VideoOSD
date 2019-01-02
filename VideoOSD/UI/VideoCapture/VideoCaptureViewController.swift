@@ -91,6 +91,11 @@ class VideoCaptureViewController: UIViewController {
     }
     
     @objc private func deviceOrientationDidChange(_ notification: Notification) {
+        // Prevent rotation when recording
+        if model.isRecording {
+            return
+        }
+        
         let deviceOrientation = UIDevice.current.orientation
         
         let angle: Double
