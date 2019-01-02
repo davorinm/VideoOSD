@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import CoreLocation
-import Photos
+import Photos // TODO: Remove
 
 class VideoCaptureViewModel {
     enum VideoCaptureViewModelError: Error {
@@ -111,14 +111,16 @@ class VideoCaptureViewModel {
         videoCapture.setupVideoDeviceInput(cameraType: CameraType.front, preferredSpec: nil)
         
         // Initial orientation
-        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
+        // TODO: Check on camera change
+//        videoCapture.deviceOrientationDidChange(orientation: UIDevice.current.orientation)
     }
     
     func useBackCamera() {
         videoCapture.setupVideoDeviceInput(cameraType: CameraType.back, preferredSpec: nil)
         
         // Initial orientation
-        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
+        // TODO: Check on camera change
+//        videoCapture.deviceOrientationDidChange(orientation: UIDevice.current.orientation)
     }
     
     func deviceOrientationDidChange(orientation: UIDeviceOrientation) {
@@ -136,7 +138,8 @@ class VideoCaptureViewModel {
         videoCapture.setup(cameraType: CameraType.back, preferredSpec: nil)
         
         // Initial orientation
-//        videoCapture.changeOrientation(orientation: UIDevice.current.orientation)
+        // TODO: Check on camera change
+//        videoCapture.deviceOrientationDidChange(orientation: UIDevice.current.orientation)
         
         // Set frame for overlay view
         updateOverlayViewFrame()
