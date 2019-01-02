@@ -91,7 +91,12 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             let queue = DispatchQueue(label: "videoDataOutputSampleQueue")
             videoDataOutput = AVCaptureVideoDataOutput()
             // TODO: Ckeck for performance for others formats
-            videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_32BGRA)]
+            videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String : kCVPixelFormatType_32BGRA]
+            // videoDataOutput.availableVideoPixelFormatTypes
+            //        875704438  kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+            //        875704422  kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+            //        1111970369 kCVPixelFormatType_32BGRA
+            
             videoDataOutput.alwaysDiscardsLateVideoFrames = true
             videoDataOutput.setSampleBufferDelegate(self, queue: queue)
             guard captureSession.canAddOutput(videoDataOutput) else {
@@ -239,8 +244,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     
     // MARK: - Video orientation
     
-    func changeOrientation(orientation: UIDeviceOrientation) {
-        // TODO: REMOVE, apply rotation on video
+    func deviceOrientationDidChange(orientation: UIDeviceOrientation) {
         guard videoConnection.isVideoOrientationSupported else {
             assertionFailure("VideoOrientation not Supported")
             return
