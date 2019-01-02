@@ -111,7 +111,7 @@ class VideoCaptureViewController: UIViewController {
             self.frontBackCameraButton.transform = CGAffineTransform(rotationAngle: CGFloat(angle))
         }
         
-        model.changeOrientation(orientation: deviceOrientation)
+        model.deviceOrientationDidChange(orientation: deviceOrientation)
     }
     
     // MARK: - Actions

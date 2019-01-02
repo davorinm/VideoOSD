@@ -61,6 +61,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         }
     }
     var imageData: ImageData?
+    var imageOrientation: CGImagePropertyOrientation = .up
     
     func setup(cameraType: CameraType, preferredSpec: VideoSpec?) {
         // initialize session
@@ -246,28 +247,19 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             return
         }
         
-        if isBackCamera {
-            switch orientation {
-            case .landscapeLeft:
-                videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeRight
-            case .landscapeRight:
-                videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft
-            case .portraitUpsideDown:
-                videoConnection.videoOrientation = AVCaptureVideoOrientation.portraitUpsideDown
-            default:
-                videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
-            }
-        } else {
-            switch orientation {
-            case .landscapeLeft:
-                videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft
-            case .landscapeRight:
-                videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeRight
-            case .portraitUpsideDown:
-                videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
-            default:
-                videoConnection.videoOrientation = AVCaptureVideoOrientation.portraitUpsideDown
-            }
+        switch orientation {
+        case .landscapeLeft:
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeRight
+            imageOrientation = .right
+        case .landscapeRight:
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft
+            imageOrientation = .left
+        case .portraitUpsideDown:
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.portraitUpsideDown
+            imageOrientation = .down
+        default:
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
+            imageOrientation = .up
         }
     }
     
@@ -332,7 +324,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             let sessionTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
             
             // Display Pixel Buffer
-            let image = CIImage(cvPixelBuffer: pixelBuffer)
+            let image = CIImage(cvPixelBuffer: pixelBuffer).oriented(imageOrientation)
             let timestamp = sessionTime - (startSessionTime ?? sessionTime)
             let time: TimeInterval = CMTimeGetSeconds(timestamp)
             self.imageData = ImageData(image: image, time: time)
