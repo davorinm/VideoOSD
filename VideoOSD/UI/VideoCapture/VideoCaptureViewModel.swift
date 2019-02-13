@@ -31,7 +31,13 @@ class VideoCaptureViewModel {
     private let locationProvider: LocationProvider = LocationProviderImpl()
     
     private var filePath: URL!
-    private let videoCapture: VideoCapture = VideoCapture()
+    
+    #if targetEnvironment(simulator)
+    private let videoCapture: VideoCapture = VideoCaptureMock()
+    #else
+    private let videoCapture: VideoCapture = VideoCaptureDevice()
+    #endif
+    
     private var displayLink: CADisplayLink!
     private var overlayView: OverlayView!
     
@@ -133,7 +139,7 @@ class VideoCaptureViewModel {
     private func setupCamera() {
         // TODO: Select format
 //        let spec = VideoSpec(fps: nil, size: CGSize(width: 1280, height: 720))
-        let spec = VideoSpec(fps: nil, size: nil)
+        let spec = VideoCaptureSpecs(fps: nil, size: nil)
         // TODO: With defined VideoSpec saving is erroneous
         videoCapture.setup(cameraType: CameraType.back, preferredSpec: nil)
         
@@ -171,10 +177,12 @@ class VideoCaptureViewModel {
     // MARK: - Helpers
     
     private func updateOverlayViewFrame() {
-        guard let size = videoCapture.videoDimensions else {
+        guard var size = videoCapture.videoDimensions else {
             assertionFailure("Size is a must!!")
             return
         }
+        
+        size = size.applying(CGAffineTransform(rotationAngle: 90))
         
         self.overlayView.updateFrame(size: size)
     }

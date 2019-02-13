@@ -6,6 +6,11 @@
 //
 import AVFoundation
 
+struct VideoCaptureSpecs {
+    var fps: Int32?
+    var size: CGSize?
+}
+
 extension AVCaptureDevice {
     private func availableFormatsFor(preferredFps: Float64) -> [AVCaptureDevice.Format] {
         var availableFormats: [AVCaptureDevice.Format] = []
@@ -47,7 +52,7 @@ extension AVCaptureDevice {
     }
     
     
-    func updateFormatWithPreferredVideoSpec(preferredSpec: VideoSpec) {
+    func updateFormatWithPreferredVideoSpec(preferredSpec: VideoCaptureSpecs) {
         let availableFormats: [AVCaptureDevice.Format]
         if let preferredFps = preferredSpec.fps {
             availableFormats = availableFormatsFor(preferredFps: Float64(preferredFps))

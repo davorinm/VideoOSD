@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1E01AE262183B51C007AF872 /* VideoOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E01AE252183B51C007AF872 /* VideoOptionsViewController.swift */; };
 		1E01AE282183B5AB007AF872 /* VideoPreviewVideoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */; };
+		1E19221D2214B80C004F679A /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E19221C2214B80C004F679A /* VideoCapture.swift */; };
+		1E19221F2214B818004F679A /* VideoCaptureMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E19221E2214B818004F679A /* VideoCaptureMock.swift */; };
 		1E21CCED213482AC00AB9685 /* CancelableTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */; };
 		1E21CCF12134867900AB9685 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF02134867900AB9685 /* OverlayView.swift */; };
 		1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF52134931A00AB9685 /* UIView+Xib.swift */; };
@@ -27,7 +29,7 @@
 		1E9D910621D8BA5200B02E3D /* VideoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9D910521D8BA5200B02E3D /* VideoHelper.swift */; };
 		1EBC0CC121B5D0FF00C32420 /* AttributedSpeechViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC021B5D0FF00C32420 /* AttributedSpeechViewController.swift */; };
 		1EBC0CC321B5D16100C32420 /* MainTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC221B5D16100C32420 /* MainTest.storyboard */; };
-		1EBC0CC621B5D39F00C32420 /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */; };
+		1EBC0CC621B5D39F00C32420 /* VideoCaptureDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC521B5D39F00C32420 /* VideoCaptureDevice.swift */; };
 		1EBC0CC821B5D3C300C32420 /* VideoCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */; };
 		1EBC0CCA21B5D3E800C32420 /* AVCaptureDevice+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Format.swift */; };
 		1EC6EF7021B07AFE009EF247 /* ObservableEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6EF6E21B07AFD009EF247 /* ObservableEvent.swift */; };
@@ -57,6 +59,8 @@
 /* Begin PBXFileReference section */
 		1E01AE252183B51C007AF872 /* VideoOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOptionsViewController.swift; sourceTree = "<group>"; };
 		1E01AE272183B5AB007AF872 /* VideoPreviewVideoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewVideoController.swift; sourceTree = "<group>"; };
+		1E19221C2214B80C004F679A /* VideoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
+		1E19221E2214B818004F679A /* VideoCaptureMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCaptureMock.swift; sourceTree = "<group>"; };
 		1E21337F215D78FE0018036A /* VideoBufferRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBufferRecorder.swift; sourceTree = "<group>"; };
 		1E21CCEC213482AC00AB9685 /* CancelableTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableTimer.swift; sourceTree = "<group>"; };
 		1E21CCF02134867900AB9685 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
@@ -81,7 +85,7 @@
 		1E9D910521D8BA5200B02E3D /* VideoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHelper.swift; sourceTree = "<group>"; };
 		1EBC0CC021B5D0FF00C32420 /* AttributedSpeechViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedSpeechViewController.swift; sourceTree = "<group>"; };
 		1EBC0CC221B5D16100C32420 /* MainTest.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainTest.storyboard; sourceTree = "<group>"; };
-		1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
+		1EBC0CC521B5D39F00C32420 /* VideoCaptureDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCaptureDevice.swift; sourceTree = "<group>"; };
 		1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCameraType.swift; sourceTree = "<group>"; };
 		1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Format.swift"; sourceTree = "<group>"; };
 		1EC6EF6E21B07AFD009EF247 /* ObservableEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableEvent.swift; sourceTree = "<group>"; };
@@ -195,7 +199,9 @@
 		1E53CC492128A917008F1B20 /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				1EBC0CC521B5D39F00C32420 /* VideoCapture.swift */,
+				1E19221C2214B80C004F679A /* VideoCapture.swift */,
+				1EBC0CC521B5D39F00C32420 /* VideoCaptureDevice.swift */,
+				1E19221E2214B818004F679A /* VideoCaptureMock.swift */,
 				1EBC0CC721B5D3C300C32420 /* VideoCameraType.swift */,
 				1EBC0CC921B5D3E800C32420 /* AVCaptureDevice+Format.swift */,
 			);
@@ -432,13 +438,15 @@
 				1EC6EF7421B07B3B009EF247 /* ProviderError.swift in Sources */,
 				72FB275821C3BCEF009DEA23 /* DrawableGLKView.swift in Sources */,
 				1EEC48E221B71E6A00FE7B99 /* VideoOptionsViewModel.swift in Sources */,
-				1EBC0CC621B5D39F00C32420 /* VideoCapture.swift in Sources */,
+				1EBC0CC621B5D39F00C32420 /* VideoCaptureDevice.swift in Sources */,
 				1E01AE262183B51C007AF872 /* VideoOptionsViewController.swift in Sources */,
 				1EBC0CC821B5D3C300C32420 /* VideoCameraType.swift in Sources */,
 				1EC6EF7121B07AFE009EF247 /* Disposable.swift in Sources */,
 				721CBFEA21BE693A00C89C92 /* DateTimeFormatter.swift in Sources */,
 				1E53CC4E2128A937008F1B20 /* VideoPlayerView.swift in Sources */,
+				1E19221D2214B80C004F679A /* VideoCapture.swift in Sources */,
 				1EC6EF7021B07AFE009EF247 /* ObservableEvent.swift in Sources */,
+				1E19221F2214B818004F679A /* VideoCaptureMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
