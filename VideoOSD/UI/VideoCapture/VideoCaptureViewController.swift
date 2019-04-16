@@ -10,6 +10,8 @@ class VideoCaptureViewController: UIViewController {
     
     private let model: VideoCaptureViewModel = VideoCaptureViewModel()
     
+    // MARK: - View lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
