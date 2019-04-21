@@ -15,7 +15,7 @@ public class ObservableEvent<Value> {
         eventHandlers.append(wrapper)
         
         return DisposableImpl {
-            if let index = self.eventHandlers.index(where: { $0 === wrapper }) {
+            if let index = self.eventHandlers.firstIndex(where: { $0 === wrapper }) {
                 self.eventHandlers.remove(at: index)
             } else {
                 assertionFailure()
