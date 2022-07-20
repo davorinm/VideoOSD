@@ -17,6 +17,7 @@
 		1E21CCF62134931A00AB9685 /* UIView+Xib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E21CCF52134931A00AB9685 /* UIView+Xib.swift */; };
 		1E24CA912131405200943AC4 /* PhotosHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA902131405200943AC4 /* PhotosHelper.swift */; };
 		1E24CA942131423A00943AC4 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24CA932131423A00943AC4 /* Filters.swift */; };
+		1E339258226C814D00AD052F /* SettingsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E339257226C814D00AD052F /* SettingsProvider.swift */; };
 		1E4A067A2150400400DC4E47 /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E4A06792150400400DC4E47 /* OverlayView.xib */; };
 		1E53CC382128A8F1008F1B20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E53CC372128A8F1008F1B20 /* AppDelegate.swift */; };
 		1E53CC3D2128A8F1008F1B20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E53CC3B2128A8F1008F1B20 /* Main.storyboard */; };
@@ -69,6 +70,7 @@
 		1E21CCF52134931A00AB9685 /* UIView+Xib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Xib.swift"; sourceTree = "<group>"; };
 		1E24CA902131405200943AC4 /* PhotosHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosHelper.swift; sourceTree = "<group>"; };
 		1E24CA932131423A00943AC4 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
+		1E339257226C814D00AD052F /* SettingsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsProvider.swift; sourceTree = "<group>"; };
 		1E4A06792150400400DC4E47 /* OverlayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OverlayView.xib; sourceTree = "<group>"; };
 		1E53CC342128A8F1008F1B20 /* VideoOSD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoOSD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E53CC372128A8F1008F1B20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -164,6 +166,14 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
+		1E339259226C815700AD052F /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				1E339257226C814D00AD052F /* SettingsProvider.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		1E53CC2B2128A8F1008F1B20 = {
 			isa = PBXGroup;
 			children = (
@@ -221,8 +231,9 @@
 		1E83D24521AAE37900B4F7BC /* Providers */ = {
 			isa = PBXGroup;
 			children = (
-				1EC6EF7321B07B3B009EF247 /* ProviderError.swift */,
 				1E83D24621AAE37900B4F7BC /* Location */,
+				1E339259226C815700AD052F /* Settings */,
+				1EC6EF7321B07B3B009EF247 /* ProviderError.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -350,7 +361,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = "Davorin Madaric";
 				TargetAttributes = {
 					1E53CC332128A8F1008F1B20 = {
@@ -460,6 +471,7 @@
 				1E19221D2214B80C004F679A /* VideoCapture.swift in Sources */,
 				1EC6EF7021B07AFE009EF247 /* ObservableEvent.swift in Sources */,
 				1E19221F2214B818004F679A /* VideoCaptureMock.swift in Sources */,
+				1E339258226C814D00AD052F /* SettingsProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,6 +541,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -554,7 +567,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -589,6 +602,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -608,7 +622,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

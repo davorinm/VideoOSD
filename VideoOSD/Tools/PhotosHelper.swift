@@ -20,6 +20,8 @@ class PhotosHelper {
             denied()
         case .authorized:
             authorized()
+        case .limited:
+            authorized()
         }
     }
     
